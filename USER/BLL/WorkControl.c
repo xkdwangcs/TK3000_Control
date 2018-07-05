@@ -9,6 +9,9 @@
 #include "MainForm.h"
 #include "WorkDataFile.h"
 
+//设备当前状态
+DeviceStatusEnum _devCurrStatus;
+
 //工作过程中，要显示到界面的相关数据
 ShowDataStruct _showDatas;
 u16 _machiningCount = 0; //加工个数，N次复位用
@@ -390,6 +393,7 @@ bool GZJC_FGFY(void)
 //锁螺丝的任务函数
 void LockScrewTask(void *arg)
 {
+	SetCurrStatus(DevWorking,"设备正在工作中");
 	_taskStartPara =(WorkTaskStartParaStruct*)arg;
 	_taskStartPara->WorkTaskState=TaskRunning;
 	if(!CheckStateBeforeWork())
@@ -479,6 +483,7 @@ BreakLoop:
 	{
 		WorkCompletedStatistics();
 	}
+	SetCurrStatus(DevReady,"设备准备就绪");
 	ShowWorkMsg_Plat(_currPlatformWork,"加工完毕！");	
 }
 	

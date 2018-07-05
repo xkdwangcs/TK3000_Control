@@ -15,13 +15,13 @@
 #include "PublicFunction.h"
 #include "DateTime.h"
 #include "RTC_F4xx.h"
-#include "DAL/SysParameter.h"
+#include "SysParameter.h"
 #include "Encrypt_XYQ.h"
 
 //计算出机器码
 char* CalcDeviceNumber(void);
 //在设备上进行注册
-bool OnRegister(char* regNum,OneStrParameterHandler showMSG);
+bool RegisterDevice(char* regNum);
 //检查机器码是否匹配
 bool CheckDeviceNum(void);
 //启动程序时,检查注册码,如果通过检查返回true

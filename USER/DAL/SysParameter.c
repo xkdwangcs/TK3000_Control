@@ -5,6 +5,7 @@
 #include "FileOperate.h"
 #include "SST25V.h"
 #include "PublicFunction.h"
+#include "Register.h"
 
 //系统参数实例
 SysParameterStruct SysParameter;
@@ -17,8 +18,10 @@ char _superPass[]="super";
 //初始化系统参数值
 void IniSysParameterValue(void)
 {
+	char* devCode=CalcDeviceNumber();//计算出本机器码
+	strcpy(_iniSysParameter.DevNumCalc,devCode);
 	strcpy(_iniSysParameter.DevicePass, "666666");
-    strcpy(_iniSysParameter.ParaVer,"ver1.03"); 
+    strcpy(_iniSysParameter.ParaVer,"ver1.04");	
 }
 
 //初始化系统参数

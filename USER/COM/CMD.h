@@ -12,17 +12,17 @@
 #include "Protocol.h"
 #include "WorkControl.h"
 	 
+	 
 //RDD相关命令的处理
 void RDDProcess(void);
 //WRT相关命令的处理
 void WRTProcess(void);
 //OUT相关命令的处理
-void OUTProcess(void);
-   
+void OUTProcess(void);   
 	 
 //设置程序当前状态。statusID：状态号，statusDescribe：状态描述文本
 //要注意的是，由于汉字显示要用UTF-8,所以传入的文字信息一定要是UTF-8.否则显示不了
-void SetCurrStatus(u16 statusID,char* statusDescribe);	 
+void SetCurrStatus(DeviceStatusEnum devStatus,char* statusDescribe);	 
 	 
 //控制器通过SRQ请求显示某一窗体
 //void ShowForm_SRQ(char* formName);

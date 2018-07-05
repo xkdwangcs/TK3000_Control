@@ -21,10 +21,11 @@ typedef enum
 typedef struct
 {
 	char DevicePass[10];		//设备管理密码,不能放在Parameter中，因为恢复出厂设置时会复位
+	char DevNumCalc[20];		//本机设备码，计算出的真实码  2018.07.05增加，方便主控调用
 	char RegNum[32];            //注册码密文
     char RegDate[20];           //注册日期，
     char YXDate[20];            //有效日期，由注册码中得出。
-    char DevNum[20];            //机器码
+    char DevNum[20];            //注册码中的机器码
 	RegisterStateEnum RegState; //注册状态
     char ParaVer[7];			//参数版本，用于自动升级参数扇区 
 }SysParameterStruct;            //固定参数结构体

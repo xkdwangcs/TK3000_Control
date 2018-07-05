@@ -14,6 +14,18 @@
 #include "MotionProc.h"
 #include "Timekeeper.h"
 	 
+	 
+typedef enum
+{
+	DeviceIniting,		//设备初始化中
+	TaskInitFail,		//任务初始化失败
+	RegWait,			//等待注册
+	DevReady,			//设备准备就绪	
+	DevWorking,			//设备正在工作中	
+	DevScram,			//急停中，查询与主动上送
+	USBInsert,			//USB已插入，查询与主动上送	
+}DeviceStatusEnum;	 
+	 
 typedef struct
 {
 	u16 CurrScrewIndex;	//当前加工的螺丝序号，从1开始的
@@ -47,6 +59,8 @@ typedef struct
 	WorkTaskStateEnum WorkTaskState;	//任务的状态
 }WorkTaskStartParaStruct;				//锁螺丝任务启动的信息结构
 
+//设备当前状态
+extern DeviceStatusEnum _devCurrStatus;
 //工作过程中，要显示到界面的相关数据
 extern ShowDataStruct _showDatas;
 //开始打螺丝时间

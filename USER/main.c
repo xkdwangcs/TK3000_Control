@@ -157,16 +157,17 @@ void DeviceInit(void)
 
     //如果急停按下，按钮已改为常闭OK，弹开为急停
     //调试时要把急停端口拉低接地
-//    if(GetInPortState(StopPort))
-//    {
-//        Delay_ms_OS(500);
-//        if(GetInPortState(StopPort))
-//        {
-//            ShowSysResetForm(KeyStop);
-//            while(GetInPortState(StopPort));
-//            ShowWelcomeForm();
-//        }
-//    }
+    if(GetInPortState(StopPort))
+    {
+        Delay_ms_OS(500);
+		SetCurrStatus(DevScram,"设备已急停");
+        if(GetInPortState(StopPort))
+        {
+            //ShowSysResetForm(KeyStop);
+            while(GetInPortState(StopPort));
+            //ShowWelcomeForm();
+        }
+    }
     //PositionResetMove();
 //    LCDBeep(300);
 //    SendCharsPack(_srq, "COM1_0K!");
@@ -174,24 +175,23 @@ void DeviceInit(void)
     if(!CheckRegister())
     {
         //ShowRegisterForm(ShowMainForm);
-				SetCurrStatus(2,"注册码录入");
+		SetCurrStatus(RegWait,"注册码录入");
     }
     else
     {
         //ShowMainForm(0);
-				SetCurrStatus(1,"设备准备就绪");
+		SetCurrStatus(DevReady,"设备准备就绪");
     }
 }
 
 int main(void)
 {
-		SetCurrStatus(4,"程序开始初始化");
+	SetCurrStatus(DeviceIniting,"设备初始化中");
     NVIC_SetVectorTable(FLASH_BASE, 0x40000);
     BSPInit();
     if(xTaskCreate(InitTask, "stat", configMINIMAL_STACK_SIZE, NULL, 3, NULL) !=pdTRUE)
     {
-			SetCurrStatus(3,"任务启动失败！");
-        //ShowWorkMsg("任务启动失败！");
+		SetCurrStatus(TaskInitFail,"任务启动失败");
     }
     vTaskStartScheduler();		
     for( ;; );

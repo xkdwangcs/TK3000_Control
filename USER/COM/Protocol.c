@@ -156,15 +156,15 @@ void CMDAnalysis(void)
 	{
 		WRTProcess();
 	}
-	else if(strncmp(_cmdRecvBuff.FunCode, _out, 3) == 0)
-	{
-		OUTProcess();
-	}
-	else
-	{
-		//packLeng = PackageChars(_oneSendPackBuff_COM1,_recPacket.func, _funcERR);
-		//SendBytes_COM1( _oneSendPackBuff_COM1, packLeng);
-	}
+//	else if(strncmp(_cmdRecvBuff.FunCode, _out, 3) == 0)
+//	{
+//		OUTProcess();
+//	}
+//	else
+//	{
+//		//packLeng = PackageChars(_oneSendPackBuff_COM1,_recPacket.func, _funcERR);
+//		//SendBytes_COM1( _oneSendPackBuff_COM1, packLeng);
+//	}
 }
 
 //作为应答的数据发送

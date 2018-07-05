@@ -365,7 +365,9 @@ void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 {
 	//如果不是主窗体则不进行任何动作
 	//if(_currFormIndex!=1 && _currFormIndex!=71 && _currFormIndex!=91)
-		//return;		
+		//return;	
+	if(_devCurrStatus!=DevReady && _devCurrStatus!=DevWorking)
+		return;
 	if(platform==RightPlatform && Parameter.ProdType==SinglePlatform)//如果是单平台不响应右平台启动
 		return;
 	if(eTaskGetState(_positionResetHandle)==eRunning)//如果正复位则不响应
@@ -387,7 +389,7 @@ void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 		{
 			if(Parameter.IsWorkpieceCheck && GetInPortState(LeftWorkpiecePort))//如果启用了工件检测，但没检测到工件
 			{
-        //WriteLog(msg);
+				//WriteLog(msg);
 				ShowWorkMsg(msg);//这种提示都要有，都要写入日志文件
 				return;
 			}
@@ -415,7 +417,7 @@ void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 		{
 			if(Parameter.IsWorkpieceCheck && GetInPortState(RightWorkpiecePort))//如果启用了工件检测，但没检测到工件
 			{
-        //WriteLog(msg);
+				//WriteLog(msg);
 				ShowWorkMsg(msg);
 				return;
 			}

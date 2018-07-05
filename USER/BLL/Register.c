@@ -1,5 +1,5 @@
 #include "Register.h"
-#include "DAL/WorkDataFile.h"
+#include "CMD.h"
 
 u32 _cpuID=0;//CPUID
 const u8 _devNumLeng=8;//机器码长度
@@ -56,20 +56,20 @@ void RemoveRegNumLine(char* regNum)
 }
 
 //在设备上进行注册
-bool OnRegister(char* regNum,OneStrParameterHandler showMSG)
+bool RegisterDevice(char* regNum)
 {
 	RemoveRegNumLine(regNum);
     u8 regLeng=strlen(regNum);
 	if(regLeng!=_regNumLeng)
 	{
-		showMSG("注册码长度错误!");
+		SetCurrStatus(RegWait,"注册码长度错误!");
 		return false;
 	}
     char regPlainStr[32]={0};//注册码明文
     //Decipher((u8*)regStr,(u8*)_keyStr,(u8*)regNum);//DES解密
     if(!Decipher_XYQ(regNum,regPlainStr))//XYQ方式解密
     {
-       	showMSG("注册码错误!");
+		SetCurrStatus(RegWait,"注册码错误!");
 		return false; 
     }
 	char* devNumCalc=CalcDeviceNumber();//计算出本机器码
@@ -79,14 +79,14 @@ bool OnRegister(char* regNum,OneStrParameterHandler showMSG)
 	//Decipher_XYQ(devNumReg1,devNumReg);//不需要双重解密机器码，因为注册机已经是解密机器码
 	if(!StrCMP_n(devNumReg,devNumCalc,8))
 	{
-		showMSG("机器码不匹配!");
+		SetCurrStatus(RegWait,"机器码不匹配!");
 		return false;
 	}
     char* yxDate = DateFormat(regPlainStr+8);//注册码中的有效日期
 	char* currDate=GetCurrDateStr();
 	if(DateTimeCMP(yxDate,currDate)!=Greater)
 	{
-		showMSG("注册码已过期!");
+		SetCurrStatus(RegWait,"注册码已过期!");
 		return false;
 	}
     memset(SysParameter.RegNum,0,sizeof(SysParameter.RegNum));
@@ -106,6 +106,7 @@ bool OnRegister(char* regNum,OneStrParameterHandler showMSG)
 		SysParameter.RegState=Limit;//有时间限制的注册
 	}
     WriteSysParameter();
+	SetCurrStatus(DevReady,"设备注册完成");
     return true;
 }
 
@@ -127,7 +128,8 @@ bool CheckRegister()//(char* msg)
     if(SysParameter.RegState==NoReg)
     {
         //strcpy(msg,"设备未注册!");
-        return false;
+        //return false;
+		return true; //设备没注册不弹出注册框
     }
 	if(!CheckDeviceNum())
 	{
@@ -140,7 +142,8 @@ bool CheckRegister()//(char* msg)
     char* yxDate=SysParameter.YXDate;
     //if(DateTimeCMP(yxDate,currDate)==Less)
 	int tdd = CalcDateDiff_String(yxDate,currDate);
-	if(tdd<3)//注册到期前3天提示
+	//if(tdd<3)//注册到期前3天提示
+	if(tdd<1) //注册码已到期
 	{
 		//strcpy(msg,"注册码已过期!");
 		return false;
