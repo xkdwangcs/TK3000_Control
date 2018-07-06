@@ -79,7 +79,7 @@ void NVIC_Config(void)
 
     //串口3中断优先级配置
 	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =3;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =2; //3
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority =1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
@@ -88,7 +88,7 @@ void NVIC_Config(void)
 	//发送优先级要高于接收中断否则触摸会异常
 	//优先级低就不能在按急按钮时弹出急停界面
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream3_IRQn;//串口3 TX
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =2;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority =1; //2
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);

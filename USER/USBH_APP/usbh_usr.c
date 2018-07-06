@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file    usbh_usr.c
   * @author  MCD Application Team
@@ -19,88 +19,88 @@
 
 USB_OTG_CORE_HANDLE   USB_OTG_Core;
 USBH_HOST             USB_Host;
-bool _isInset=false;  //UÅÌÊÇ·ñÒÑ¾­²åÈë
+bool _isInset=false;  //Uç›˜æ˜¯å¦å·²ç»æ’å…¥
 
-//USB»Øµ÷º¯Êı±í£¬Ë³ĞòÖ´ĞĞ
+//USBå›è°ƒå‡½æ•°è¡¨ï¼Œé¡ºåºæ‰§è¡Œ
 USBH_Usr_cb_TypeDef USR_cb =
 {
-  USBH_USR_Init,							//³õÊ¼»¯
+  USBH_USR_Init,							//åˆå§‹åŒ–
   USBH_USR_DeInit,
-  USBH_USR_DeviceAttached,					//¼ì²âµ½ÓĞUSBÉè±¸²åÈë
-  USBH_USR_ResetDevice,						//ÖØÖÃÉè±¸
-  USBH_USR_DeviceDisconnected,				//¼ì²âµ½ÓĞÉè±¸ÒÆ³ı
+  USBH_USR_DeviceAttached,					//æ£€æµ‹åˆ°æœ‰USBè®¾å¤‡æ’å…¥
+  USBH_USR_ResetDevice,						//é‡ç½®è®¾å¤‡
+  USBH_USR_DeviceDisconnected,				//æ£€æµ‹åˆ°æœ‰è®¾å¤‡ç§»é™¤
   USBH_USR_OverCurrentDetected,
-  USBH_USR_DeviceSpeedDetected,				//¼ì²âÉè±¸ËÙ¶È£¬ÀıÈç¸ßËÙ¡¢È«ËÙ¡¢µÍËÙ
-  USBH_USR_Device_DescAvailable,			//Éè±¸ĞÅÏ¢
-  USBH_USR_DeviceAddressAssigned,	   		//·ÖÅäµØÖ·³É¹¦
-  USBH_USR_Configuration_DescAvailable,	    //ÅäÖÃÃèÊö
-  USBH_USR_Manufacturer_String,		  		//³§ÉÌĞÅÏ¢£¨×Ö·û´®£©
-  USBH_USR_Product_String,			  		//²úÆ·ĞÅÏ¢£¨×Ö·û´®£©
-  USBH_USR_SerialNum_String,		   		//Éè±¸´®ºÅ
-  USBH_USR_EnumerationDone,			  		//Ã¶¾ÙÍê³É
-  USBH_USR_UserInput,						//ÓÃ»§²Ù×÷Ó¦ÓÃ³ÌĞò×´Ì¬ÌõÄ¿
-  USBH_USR_MSC_Application,					//USBÓ¦ÓÃ²Ù×÷
-  USBH_USR_DeviceNotSupported,				//Éè±¸²»Ö§³Ö
+  USBH_USR_DeviceSpeedDetected,				//æ£€æµ‹è®¾å¤‡é€Ÿåº¦ï¼Œä¾‹å¦‚é«˜é€Ÿã€å…¨é€Ÿã€ä½é€Ÿ
+  USBH_USR_Device_DescAvailable,			//è®¾å¤‡ä¿¡æ¯
+  USBH_USR_DeviceAddressAssigned,	   		//åˆ†é…åœ°å€æˆåŠŸ
+  USBH_USR_Configuration_DescAvailable,	    //é…ç½®æè¿°
+  USBH_USR_Manufacturer_String,		  		//å‚å•†ä¿¡æ¯ï¼ˆå­—ç¬¦ä¸²ï¼‰
+  USBH_USR_Product_String,			  		//äº§å“ä¿¡æ¯ï¼ˆå­—ç¬¦ä¸²ï¼‰
+  USBH_USR_SerialNum_String,		   		//è®¾å¤‡ä¸²å·
+  USBH_USR_EnumerationDone,			  		//æšä¸¾å®Œæˆ
+  USBH_USR_UserInput,						//ç”¨æˆ·æ“ä½œåº”ç”¨ç¨‹åºçŠ¶æ€æ¡ç›®
+  USBH_USR_MSC_Application,					//USBåº”ç”¨æ“ä½œ
+  USBH_USR_DeviceNotSupported,				//è®¾å¤‡ä¸æ”¯æŒ
   USBH_USR_UnrecoveredError 
 };
 
-//¿ÉÒÔ³õÊ¼»¯Ò»Ğ©¶«Î÷
+//å¯ä»¥åˆå§‹åŒ–ä¸€äº›ä¸œè¥¿
 void USBH_USR_Init(void)
 {
 
 }
 
-//¼ì²âµ½UÅÌ²åÈë
+//æ£€æµ‹åˆ°Uç›˜æ’å…¥
 void USBH_USR_DeviceAttached(void)
 {
-	//printf("¼ì²âµ½USBÉè±¸²åÈë!\r\n");
+	//printf("æ£€æµ‹åˆ°USBè®¾å¤‡æ’å…¥!\r\n");
 }
 
-//ÎŞ·¨»Ö¸´µÄ´íÎó!!
+//æ— æ³•æ¢å¤çš„é”™è¯¯!!
 void USBH_USR_UnrecoveredError (void)
 {
-	//printf("ÎŞ·¨»Ö¸´µÄ´íÎó!!!\r\n\r\n");
+	//printf("æ— æ³•æ¢å¤çš„é”™è¯¯!!!\r\n\r\n");
 }
 
-//¼ì²âµ½UÅÌ°Î³ö
+//æ£€æµ‹åˆ°Uç›˜æ‹”å‡º
 void USBH_USR_DeviceDisconnected (void)
 {
-	//printf("USBÉè±¸°Î³ö!\r\n");
-	SetUSBHostTaskEnable(false);//ÔÚ´Ë¿ÉÒÔ¹Ø±ÕUSBHostÈÎÎñ£¬½ÚÊ¡ÈÎÎñ×ÊÔ´
+	//printf("USBè®¾å¤‡æ‹”å‡º!\r\n");
+	SetUSBHostTaskEnable(false);//åœ¨æ­¤å¯ä»¥å…³é—­USBHostä»»åŠ¡ï¼ŒèŠ‚çœä»»åŠ¡èµ„æº
 	_isInset=0;
 }
 
-//ÖØÖÃÇı¶¯
+//é‡ç½®é©±åŠ¨
 void USBH_USR_ResetDevice(void)
 {
 	/* callback for USB-Reset */
 	//printf("USBH_USR_ResetDevice\r\n");
 }
 
-//¼ì²âµ½´Ó»úËÙ¶È
-//DeviceSpeed:´Ó»úËÙ¶È(0,1,2 / ÆäËû)
+//æ£€æµ‹åˆ°ä»æœºé€Ÿåº¦
+//DeviceSpeed:ä»æœºé€Ÿåº¦(0,1,2 / å…¶ä»–)
 void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 {
 	/*if(DeviceSpeed==HPRT0_PRTSPD_HIGH_SPEED)
 	{
-		printf("¸ßËÙ(HS)USBÉè±¸!\r\n");
+		printf("é«˜é€Ÿ(HS)USBè®¾å¤‡!\r\n");
  	}  
 	else if(DeviceSpeed==HPRT0_PRTSPD_FULL_SPEED)
 	{
-		printf("È«ËÙ(FS)USBÉè±¸!\r\n"); 
+		printf("å…¨é€Ÿ(FS)USBè®¾å¤‡!\r\n"); 
 	}
 	else if(DeviceSpeed==HPRT0_PRTSPD_LOW_SPEED)
 	{
-		printf("µÍËÙ(LS)USBÉè±¸!\r\n");  
+		printf("ä½é€Ÿ(LS)USBè®¾å¤‡!\r\n");  
 	}
 	else
 	{
-		printf("Éè±¸´íÎó!\r\n");  
+		printf("è®¾å¤‡é”™è¯¯!\r\n");  
 	}  */
 }
 
-//¼ì²âµ½´Ó»úµÄÃèÊö·û
-//DeviceDesc:Éè±¸ÃèÊö·ûÖ¸Õë
+//æ£€æµ‹åˆ°ä»æœºçš„æè¿°ç¬¦
+//DeviceDesc:è®¾å¤‡æè¿°ç¬¦æŒ‡é’ˆ
 void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 {
 //	USBH_DevDesc_TypeDef *hs;
@@ -109,14 +109,14 @@ void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 //	usb_printf("> PID : %04Xh\r\n" , (uint32_t)(*hs).idProduct);
 }
 
-//´Ó»úµØÖ··ÖÅä³É¹¦
+//ä»æœºåœ°å€åˆ†é…æˆåŠŸ
 void USBH_USR_DeviceAddressAssigned(void)
 {
-  //printf("´Ó»úµØÖ··ÖÅä³É¹¦\r\n");
+  //printf("ä»æœºåœ°å€åˆ†é…æˆåŠŸ\r\n");
 }
 
 
-//ÅäÖÃÃèÊö·û»ñÓĞĞ§
+//é…ç½®æè¿°ç¬¦è·æœ‰æ•ˆ
 void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
                                           USBH_InterfaceDesc_TypeDef *itfDesc,
                                           USBH_EpDesc_TypeDef *epDesc)
@@ -125,56 +125,56 @@ void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 	id = itfDesc;   
 	if((*id).bInterfaceClass==0x08)
 	{
-		//printf("¿ÉÒÆ¶¯´æ´¢Æ÷Éè±¸!\r\n"); 
+		//printf("å¯ç§»åŠ¨å­˜å‚¨å™¨è®¾å¤‡!\r\n"); 
 	}
     else if((*id).bInterfaceClass==0x03)
 	{
-		//printf("HID Éè±¸!\r\n"); 
+		//printf("HID è®¾å¤‡!\r\n"); 
 	}*/    
 }
 
-//³§ÉÌ£¨×Ö·û´®£©ĞÅÏ¢
+//å‚å•†ï¼ˆå­—ç¬¦ä¸²ï¼‰ä¿¡æ¯
 void USBH_USR_Manufacturer_String(void *ManufacturerString)
 {
   //printf("Manufacturer : %s\r\n", (char *)ManufacturerString);
 }
 
-//²úÆ·ĞÅÏ¢£¨×Ö·û´®£©
+//äº§å“ä¿¡æ¯ï¼ˆå­—ç¬¦ä¸²ï¼‰
 void USBH_USR_Product_String(void *ProductString)
 {
 	//printf("Product : %s\r\n", (char *)ProductString);
 }
 
-//Éè±¸´®ºÅ
+//è®¾å¤‡ä¸²å·
 void USBH_USR_SerialNum_String(void *SerialNumString)
 {
 	//printf( "Serial Number : %s\r\n", (char *)SerialNumString); 
 }
 
-//Éè±¸USBÃ¶¾ÙÍê³É
+//è®¾å¤‡USBæšä¸¾å®Œæˆ
 void USBH_USR_EnumerationDone(void)
 {
-//	printf("Éè±¸USBÃ¶¾ÙÍê³É\r\n");	
+//	printf("è®¾å¤‡USBæšä¸¾å®Œæˆ\r\n");	
 //	USB_OTG_BSP_mDelay(500);
 	//USBH_USR_MSC_Application();
 }
 
-//ÎŞ·¨Ê¶±ğµÄUSBÉè±¸
+//æ— æ³•è¯†åˆ«çš„USBè®¾å¤‡
 void USBH_USR_DeviceNotSupported(void)
 {
-	//printf("ÎŞ·¨Ê¶±ğµÄUSBÉè±¸\r\n");
+	//printf("æ— æ³•è¯†åˆ«çš„USBè®¾å¤‡\r\n");
 }
 
-//ÓÃ»§²Ù×÷Ó¦ÓÃ³ÌĞò×´Ì¬ÌõÄ¿
+//ç”¨æˆ·æ“ä½œåº”ç”¨ç¨‹åºçŠ¶æ€æ¡ç›®
 USBH_USR_Status USBH_USR_UserInput(void)
 {
 	return USBH_USR_RESP_OK;
 }
 
-//USB½Ó¿ÚµçÁ÷¹ıÔØ
+//USBæ¥å£ç”µæµè¿‡è½½
 void USBH_USR_OverCurrentDetected (void)
 {
-	//printf("¶Ë¿ÚµçÁ÷¹ı´ó!!!\r\n");
+	//printf("ç«¯å£ç”µæµè¿‡å¤§!!!\r\n");
 }
 
 void USBBackReset(u16 keyCode)
@@ -182,24 +182,24 @@ void USBBackReset(u16 keyCode)
 	SystemReset();
 }
 
-//Ó¦ÓÃ²Ù×÷
+//åº”ç”¨æ“ä½œ
 int USBH_USR_MSC_Application(void)
 {
     if(!_isInset)
     {
       _isInset=true;
-			PermissionTypeEnum destPer=AdminiPer;//ĞèÒª¹ÜÀíÔ±¼°ÒÔÉÏÈ¨ÏŞ
+			PermissionTypeEnum destPer=AdminiPer;//éœ€è¦ç®¡ç†å‘˜åŠä»¥ä¸Šæƒé™
 //		if(_currPermission<destPer)
 //		{
 //			ShowLoginForm(destPer,ShowUSBOprateForm,USBBackReset);
 //			return 0;
 //		}
-		ShowUSBFuncForm();
+      DeviceStatusSRQ(USBInsert,"æ£€æµ‹åˆ°Uç›˜å·²æ’å…¥è®¾å¤‡");
     }
 	return 0;
 }
 
-//ÓÃ»§ÒªÇóÖØĞÂ³õÊ¼»¯Éè±¸
+//ç”¨æˆ·è¦æ±‚é‡æ–°åˆå§‹åŒ–è®¾å¤‡
 void USBH_USR_DeInit(void)
 {
 	//USBH_USR_ApplicationState = USH_USR_FS_INIT;

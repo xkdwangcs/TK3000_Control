@@ -1,4 +1,4 @@
-﻿/*****************
+/*****************
 UpdataDate:2016-08-31 22:10 XYQ
 ******************/
 
@@ -58,16 +58,21 @@ void BKPreg_Configuration(void)
 }
 
 void BSPInit(void)
-{
+{   
     BKPreg_Configuration();
     bool isHeat = PDHeatBoot();
     GPIO_Config();
     Timer_Config();
     ResetState(isHeat);
-    InitUSART_COM3();
-    //ESP8266_StartServer();
     NVIC_Config();
     Exti_Config();
+    InitUSART_COM3();
+    //ESP8266_StartServer();
+    if(Parameter.CommChannel==RS232)
+        InitUSART_COM1();
+    //else
+    //InitUSART_COM2();//F407使用的是USART6，要修改
+    DeviceStatusSRQ(DeviceIniting,"设备初始化中");
     IniRTC();
     IniTimekeeper(); //初始化定时器、计时器
     FLASH_Init();
@@ -134,10 +139,6 @@ void DeviceInit(void)
     IniPortCFGFile();
     IniMoveProcFile();
     AxisInit();	//轴初始化
-    if(Parameter.CommChannel==RS232)
-        InitUSART_COM1();
-    //else
-    //InitUSART_COM2();//F407使用的是USART6，要修改
 //    WaitLCDPowerOn();
 //    ShowWelcomeForm();
 
@@ -160,10 +161,9 @@ void DeviceInit(void)
     if(GetInPortState(StopPort))
     {
         Delay_ms_OS(500);
-		SetCurrStatus(DevScram,"设备已急停");
+        SetCurrStatus(DevScram,"设备已急停");
         if(GetInPortState(StopPort))
         {
-            //ShowSysResetForm(KeyStop);
             while(GetInPortState(StopPort));
             //ShowWelcomeForm();
         }
@@ -175,18 +175,18 @@ void DeviceInit(void)
     if(!CheckRegister())
     {
         //ShowRegisterForm(ShowMainForm);
-		SetCurrStatus(RegWait,"注册码录入");
+      SetCurrStatus(RegWait,"注册码录入");
     }
     else
     {
         //ShowMainForm(0);
-		SetCurrStatus(DevReady,"设备准备就绪");
+        SetCurrStatus(DevReady,"设备准备就绪");
     }
 }
 
 int main(void)
 {
-	SetCurrStatus(DeviceIniting,"设备初始化中");
+    SetCurrStatus(DeviceIniting,"设备初始化中");
     NVIC_SetVectorTable(FLASH_BASE, 0x40000);
     BSPInit();
     if(xTaskCreate(InitTask, "stat", configMINIMAL_STACK_SIZE, NULL, 3, NULL) !=pdTRUE)

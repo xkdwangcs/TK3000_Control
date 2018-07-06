@@ -127,9 +127,8 @@ bool CheckRegister()//(char* msg)
 {
     if(SysParameter.RegState==NoReg)
     {
-        //strcpy(msg,"设备未注册!");
-        //return false;
-		return true; //设备没注册不弹出注册框
+        return false;
+        //return true; //设备未注册不弹出注册框
     }
 	if(!CheckDeviceNum())
 	{

@@ -327,7 +327,7 @@
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <VariousControls>
-              <MiscControls>--c99</MiscControls>
+              <MiscControls>--c99 --locale=english --diag_suppress=870 </MiscControls>
               <Define>STM32F4XX,USE_USB_OTG_FS, USE_EMBEDDED_PHY, USE_STDPERIPH_DRIVER, __FPU_PRESENT = 1,__FPU_USED = 1,ARM_MATH_CM4, __CC_ARM</Define>
               <Undefine></Undefine>
               <IncludePath>..\STM32F40x_FWLib\inc;..\STM32F40x_FWLib\src;..\USER;..\CORE;.\Public;.\FreeRTOS;.\FreeRTOS\include;.\BSP;.\USBH_APP;..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc;..\Libraries\STM32_USB_HOST_Library\Core\inc;..\Libraries\STM32_USB_OTG_Driver\inc;.\USBD_APP;..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\Libraries\STM32_USB_Device_Library\Core\inc;.\DAL;.\BLL;.\COM;.\WIFI;.\Motion;.\UI</IncludePath>

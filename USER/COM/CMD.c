@@ -68,24 +68,17 @@ void WRTProcess(void)
     {		
       AxisPTStop(GetAxisIDFormStr((char*)_cmdRecvBuff.CmdData));
     }
-	if (StrCMP(_cmdRecvBuff.CmdName, "RegisterDevice")) //设备注册
+    if (StrCMP(_cmdRecvBuff.CmdName, "RegisterDevice")) //设备注册
     {		
       RegisterDevice((char*)_cmdRecvBuff.CmdData);
     }
 }
 
-
-//控制器通过SRQ请求显示USB功能窗体
-void ShowUSBFuncForm(void)
+//主动上送设备状态
+void DeviceStatusSRQ(DeviceStatusEnum devStatus,char* statusDescribe)
 {
-  SendChars_Pack(_srq,_showFormCmd,"USBFunc_Ctr");
+  SetCurrStatus(devStatus,statusDescribe);
+  SendBytes_Pack(_srq,"CURRSTATUS",(u8*)_statuStr,sizeof(_statuStr));
 }
 
-//显示系统复位窗体,stopSource:指停止源是屏幕上急停还是机台上按钮急停
-void ShowSysResetForm(StopSource stopSource)
-{
-  char cmdBuff[20]={0};
-  AppendStrAddSplit(cmdBuff, "SysResetForm,", ConvertU32ToAscii(stopSource));
-  SendChars_Pack(_srq,_showFormCmd,cmdBuff);
-}
 

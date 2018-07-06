@@ -1,4 +1,4 @@
-#include "AppTasks.h"
+ï»¿#include "AppTasks.h"
 #include "MainForm.h"
 //#include "IOTest.h"
 #include "main.h"
@@ -9,34 +9,34 @@
 //#include "LogFile.h"
 
 portTickType _xLastWakeTime;
-xTaskHandle _showRealDataHandle;    //ÏÔÊ¾ÊµÊ±×ø±êµÄÈÎÎñ¾ä±ú
-xTaskHandle _workRunLeftHandle;  	//×óÆ½Ì¨´òÂİË¿¾ä±ú
-xTaskHandle _workRunRightHandle;  	//ÓÒÆ½Ì¨´òÂİË¿¾ä±ú
-xTaskHandle _positionResetHandle;   //Î»ÖÃ¸´Î»¾ä±ú
-xTaskHandle _alarmHandle;           //±¨¾¯µÆÉÁË¸¾ä±ú
-xTaskHandle _IOStateShowHandle;		//IO¿Ú×´Ì¬ÏÔÊ¾
-xTaskHandle _dateTimeShowHandle;	//½çÃæÉÏÊ±¼äµÄÏÔÊ¾
+xTaskHandle _showRealDataHandle;    //æ˜¾ç¤ºå®æ—¶åæ ‡çš„ä»»åŠ¡å¥æŸ„
+xTaskHandle _workRunLeftHandle;  	//å·¦å¹³å°æ‰“èºä¸å¥æŸ„
+xTaskHandle _workRunRightHandle;  	//å³å¹³å°æ‰“èºä¸å¥æŸ„
+xTaskHandle _positionResetHandle;   //ä½ç½®å¤ä½å¥æŸ„
+xTaskHandle _alarmHandle;           //æŠ¥è­¦ç¯é—ªçƒå¥æŸ„
+xTaskHandle _IOStateShowHandle;		//IOå£çŠ¶æ€æ˜¾ç¤º
+xTaskHandle _dateTimeShowHandle;	//ç•Œé¢ä¸Šæ—¶é—´çš„æ˜¾ç¤º
 xTaskHandle _usbHostHandle;			//USBHost
-xTaskHandle _fatfsOperateHandle;	//FATFSÏà¹Ø²Ù×÷µÄÈÎÎñ¾ä±ú,°üÀ¨USBµÄ²Ù×÷
-xTaskHandle _setUSBDirverHandle;	//¿ªÊ¼USB´æ´¢Éè±¸µÄÈÎÎñ¾ä±ú
-xTaskHandle _inportEventHandle;		//ÊäÈë¿ÚÊÂ¼şÈÎÎñ¾ä±ú
+xTaskHandle _fatfsOperateHandle;	//FATFSç›¸å…³æ“ä½œçš„ä»»åŠ¡å¥æŸ„,åŒ…æ‹¬USBçš„æ“ä½œ
+xTaskHandle _setUSBDirverHandle;	//å¼€å§‹USBå­˜å‚¨è®¾å¤‡çš„ä»»åŠ¡å¥æŸ„
+xTaskHandle _inportEventHandle;		//è¾“å…¥å£äº‹ä»¶ä»»åŠ¡å¥æŸ„
 
 static BaseType_t xHigherPriorityTaskWoken;  
 static BaseType_t xHigherPriorityTaskWokenRight;  
-//ÖØ´òĞÅºÅÁ¿
+//é‡æ‰“ä¿¡å·é‡
 SemaphoreHandle_t _xSemaphoreRedo;
-//´òÒ»ÏÂĞÅºÅÁ¿
+//æ‰“ä¸€ä¸‹ä¿¡å·é‡
 SemaphoreHandle_t _xSemaphoreNext;
-//ÊÇ·ñÒÑ½øÈë¹ÊÕÏµÈ´ı×´Ì¬
+//æ˜¯å¦å·²è¿›å…¥æ•…éšœç­‰å¾…çŠ¶æ€
 bool _isWaitSemaphore=false;
-//×óÆ½Ì¨ËøÂİË¿ÈÎÎñ²ÎÊı£¬ÄÚ²¿ÓÃ¡£ÈÎÎñº¯ÊıÍ¨¹ı²ÎÊıarg»ñÈ¡
+//å·¦å¹³å°é”èºä¸ä»»åŠ¡å‚æ•°ï¼Œå†…éƒ¨ç”¨ã€‚ä»»åŠ¡å‡½æ•°é€šè¿‡å‚æ•°argè·å–
 WorkTaskStartParaStruct _leftStartPara={LeftPlatform,Key,TaskNoRun};
-//ÓÒÆ½Ì¨ËøÂİË¿ÈÎÎñ²ÎÊı£¬ÄÚ²¿ÓÃ¡£ÈÎÎñº¯ÊıÍ¨¹ı²ÎÊıarg»ñÈ¡
+//å³å¹³å°é”èºä¸ä»»åŠ¡å‚æ•°ï¼Œå†…éƒ¨ç”¨ã€‚ä»»åŠ¡å‡½æ•°é€šè¿‡å‚æ•°argè·å–
 WorkTaskStartParaStruct _rightStartPara={RightPlatform,Key,TaskNoRun};
-//Ò»¸öÖ´ĞĞFATFS²Ù×÷Ïà¹ØµÄº¯Êı¾ä±ú
+//ä¸€ä¸ªæ‰§è¡ŒFATFSæ“ä½œç›¸å…³çš„å‡½æ•°å¥æŸ„
 EventHandlerNoPara _oneFatfsOperateFunc=NULL;
 
-//ÊäÈë¿ÚÊÂ¼ş¼ì²â²¢Ö´ĞĞ
+//è¾“å…¥å£äº‹ä»¶æ£€æµ‹å¹¶æ‰§è¡Œ
 void InportEventCheckRun(void);
 void InportEventTask(void *arg);
 
@@ -47,14 +47,14 @@ void Delay_ms_OS(u16 ms)
 	vTaskDelayUntil(&_xLastWakeTime,ms/portTICK_RATE_MS);
 }
 
-//ÑÓÊ±£¬Ãë
+//å»¶æ—¶ï¼Œç§’
 void Delay_s_OS(float time_s)
 {
 	u32 time_int = (u32) (time_s * 1000.0);
 	Delay_ms_OS(time_int);	
 }
 
-//ÏÔÊ¾ÊµÊ±Êı¾İ
+//æ˜¾ç¤ºå®æ—¶æ•°æ®
 void ShowRealData(void *arg)
 {
 	while(true)
@@ -97,7 +97,7 @@ void PositionResetTask(void *arg)
 {
 	for(;;)
 	{
-		/* µÈ´ıÍ¨Öª£¬½øÈë×èÈû */  
+		/* ç­‰å¾…é€šçŸ¥ï¼Œè¿›å…¥é˜»å¡ */  
 		ulTaskNotifyTake( pdTRUE, portMAX_DELAY);  
 		//xTaskNotifyWait();
 		PositionResetMove();
@@ -105,12 +105,12 @@ void PositionResetTask(void *arg)
 }
 
 bool _isOpenUSBDirver=false;
-//Éè±¸×÷ÎªĞéÄâ´ÅÅÌµÄ´ò¿ª»ò¹Ø±ÕµÄÈÎÎñ£¬ÄÚ²¿
+//è®¾å¤‡ä½œä¸ºè™šæ‹Ÿç£ç›˜çš„æ‰“å¼€æˆ–å…³é—­çš„ä»»åŠ¡ï¼Œå†…éƒ¨
 void SetOpenMassTask(void *arg)
 {
 	for(;;)
 	{
-		/* µÈ´ıÍ¨Öª£¬½øÈë×èÈû */  
+		/* ç­‰å¾…é€šçŸ¥ï¼Œè¿›å…¥é˜»å¡ */  
 		ulTaskNotifyTake( pdTRUE, portMAX_DELAY);  
 		if(_isOpenUSBDirver)
 		{
@@ -125,14 +125,14 @@ void SetOpenMassTask(void *arg)
 	}
 }
 
-//¿ªÆô»ò¹Ø±ÕÉè±¸×÷ÎªĞéÄâ´ÅÅÌ£¬Íâ²¿µ÷ÓÃ
+//å¼€å¯æˆ–å…³é—­è®¾å¤‡ä½œä¸ºè™šæ‹Ÿç£ç›˜ï¼Œå¤–éƒ¨è°ƒç”¨
 void SetUSBMassStorage(bool isOpen)
 {
 	_isOpenUSBDirver=isOpen;
 	xTaskNotifyGive(_setUSBDirverHandle);
 }
 
-//ÔËĞĞYÖá×¼±¸ÈÎÎñ
+//è¿è¡ŒYè½´å‡†å¤‡ä»»åŠ¡
 void RunYReadyTask(LeftRightPlatformEnum plat)
 {
 	_yReadyPlat=plat;
@@ -155,13 +155,13 @@ void DeviceAndTaskInit(void)
 	xTaskCreate(InportEventTask, "InportEvnet", configMINIMAL_STACK_SIZE, NULL, 3, &_inportEventHandle);	
 }
 
-//Ö´ĞĞÓëFATFSÏà¹ØËùÓĞ²Ù×÷ÈÎÎñµÄº¯Êı
+//æ‰§è¡Œä¸FATFSç›¸å…³æ‰€æœ‰æ“ä½œä»»åŠ¡çš„å‡½æ•°
 void FATFSOperate_ALL(void *arg)
 {
-	DeviceAndTaskInit();//Éè±¸³õÊ¼»¯¼°ÈÎÎñ³õÊ¼»¯Ö»ÔËĞĞÒ»´Î
+	DeviceAndTaskInit();//è®¾å¤‡åˆå§‹åŒ–åŠä»»åŠ¡åˆå§‹åŒ–åªè¿è¡Œä¸€æ¬¡
     for(;;)
 	{
-		//µÈ´ıÍ¨Öª£¬½øÈë×èÈû 
+		//ç­‰å¾…é€šçŸ¥ï¼Œè¿›å…¥é˜»å¡ 
 		ulTaskNotifyTake( pdTRUE, portMAX_DELAY);
 		if(_oneFatfsOperateFunc!=NULL)
 		{
@@ -170,16 +170,16 @@ void FATFSOperate_ALL(void *arg)
 			continue;
 		}
 		
-		//USBµÄ²Ù×÷ÈÎÎñ£¬ÒªÈ·±£ÆäËüÈÎÎñ²»»áÖ´ĞĞµ½ÏÂÃæ
-		SetUSBHostTaskEnable(false);//Ö´ĞĞUSBÏà¹ØÈÎÎñÊ±ÒªÏÈ¹Ø±ÕHostÈÎÎñ£¬·ñÔò¶ÁĞ´USB»á³ö´í
+		//USBçš„æ“ä½œä»»åŠ¡ï¼Œè¦ç¡®ä¿å…¶å®ƒä»»åŠ¡ä¸ä¼šæ‰§è¡Œåˆ°ä¸‹é¢
+		SetUSBHostTaskEnable(false);//æ‰§è¡ŒUSBç›¸å…³ä»»åŠ¡æ—¶è¦å…ˆå…³é—­Hostä»»åŠ¡ï¼Œå¦åˆ™è¯»å†™USBä¼šå‡ºé”™
 		USBOpereateTask();
     //MoveOpereateTask();
-		//LogFileOpereateTask();//·ÇUSB²Ù×÷²»ÄÜ·ÅÔÚ´Ë´¦£¬»á´ò¿ªUSBHostÁ¬½ÓÈÎÎñ£¬Õ¼ÓÃ×ÊÔ´
-		SetUSBHostTaskEnable(true);//ÔÚ´ËÒª´ò¿ªHostÈÎÎñ£¬·ñÔò²»ÄÜ¶à´ÎÁ¬USB
+		//LogFileOpereateTask();//éUSBæ“ä½œä¸èƒ½æ”¾åœ¨æ­¤å¤„ï¼Œä¼šæ‰“å¼€USBHostè¿æ¥ä»»åŠ¡ï¼Œå ç”¨èµ„æº
+		SetUSBHostTaskEnable(true);//åœ¨æ­¤è¦æ‰“å¼€Hostä»»åŠ¡ï¼Œå¦åˆ™ä¸èƒ½å¤šæ¬¡è¿USB
     }        
 }
 
-//¿ªÊ¼FATFS²Ù×÷µÄÏà¹ØÈÎÎñ
+//å¼€å§‹FATFSæ“ä½œçš„ç›¸å…³ä»»åŠ¡
 void StartFATFSTask(void)
 {
 	if(eTaskGetState(_fatfsOperateHandle)==eRunning)
@@ -187,22 +187,22 @@ void StartFATFSTask(void)
     xTaskNotifyGive(_fatfsOperateHandle);  
 }
 
-//ÈÎÎñ³õÊ¼»¯
+//ä»»åŠ¡åˆå§‹åŒ–
 void InitTask(void *arg)
 {
-	//ÊÇ·ñÒÑ½øÈë¹ÊÕÏµÈ´ı×´Ì¬
+	//æ˜¯å¦å·²è¿›å…¥æ•…éšœç­‰å¾…çŠ¶æ€
 	_isWaitSemaphore=false;		
-	//ÖØ´òĞÅºÅÁ¿
-	_xSemaphoreRedo= xSemaphoreCreateBinary();  //¶şÖµĞÅºÅÁ¿;
-	//´òÒ»ÏÂĞÅºÅÁ¿
-	_xSemaphoreNext= xSemaphoreCreateBinary();  //¶şÖµĞÅºÅÁ¿;
+	//é‡æ‰“ä¿¡å·é‡
+	_xSemaphoreRedo= xSemaphoreCreateBinary();  //äºŒå€¼ä¿¡å·é‡;
+	//æ‰“ä¸€ä¸‹ä¿¡å·é‡
+	_xSemaphoreNext= xSemaphoreCreateBinary();  //äºŒå€¼ä¿¡å·é‡;
 
 	xTaskCreate(FATFSOperate_ALL, "USBOP", 6000, NULL, 3, &_fatfsOperateHandle);
 	xTaskCreate(USBHost, "USBHost", configMINIMAL_STACK_SIZE, NULL, 3, &_usbHostHandle);
     vTaskSuspend(_usbHostHandle);    
 	xTaskCreate(SetOpenMassTask, "OpenMass", configMINIMAL_STACK_SIZE, NULL, 3, &_setUSBDirverHandle);    
-	USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_cb); //³õÊ¼»¯USBHost
-    //WriteLog("Éè±¸³õÊ¼»¯³É¹¦£¡");
+	USBH_Init(&USB_OTG_Core,USB_OTG_FS_CORE_ID,&USB_Host,&USBH_MSC_cb,&USR_cb); //åˆå§‹åŒ–USBHost
+    //WriteLog("è®¾å¤‡åˆå§‹åŒ–æˆåŠŸï¼");
     vTaskDelete(NULL);
     for(;;)
     {
@@ -210,7 +210,7 @@ void InitTask(void *arg)
     }
 }
 
-bool _isMotionTest=false;//ÊÇ·ñÕıÔÚ¶¯×÷²âÊÔ
+bool _isMotionTest=false;//æ˜¯å¦æ­£åœ¨åŠ¨ä½œæµ‹è¯•
 void StartTestCoordMove()
 {
 	if(IsWorkRunning())
@@ -222,7 +222,7 @@ void StartTestCoordMove()
 	_isMotionTest=true;
 }
 
-//Í£Ö¹ËùÓĞµÄÈÎÎñ
+//åœæ­¢æ‰€æœ‰çš„ä»»åŠ¡
 void StopTasks(void)
 {	
 	vTaskSuspend(_fatfsOperateHandle);  
@@ -235,29 +235,29 @@ void StopTasks(void)
     vTaskSuspend(_dateTimeShowHandle); 		
     //vTaskSuspend(_usbHostHandle);	
     //vTaskSuspend(_setUSBDirverHandle);
-	//vTaskSuspendAll();//²»ÄÜ¹ÒÆğµ÷¶ÈÆ÷·ñÔòµç»úÓĞÊ±Í£²»ÏÂÀ´
+	//vTaskSuspendAll();//ä¸èƒ½æŒ‚èµ·è°ƒåº¦å™¨å¦åˆ™ç”µæœºæœ‰æ—¶åœä¸ä¸‹æ¥
 }
 
-//¼±Í£
+//æ€¥åœ
 void ScramStop(StopSource stopSource)
 {
 //	if(stopSource==ScreenStop)
 //	{
-//		WriteLog("ÔÚLCDÉÏ°´ÏÂÁË¼±Í££¡");
+//		WriteLog("åœ¨LCDä¸ŠæŒ‰ä¸‹äº†æ€¥åœï¼");
 //	}
 //	else if(stopSource==KeyStop)
 //	{
-//		WriteLog("°´ÏÂÁË¼±Í£°´Å¥£¡");
+//		WriteLog("æŒ‰ä¸‹äº†æ€¥åœæŒ‰é’®ï¼");
 //	}
 	
 	StopTasks();
 	StopAllAxis();
 	//StopTasks();
-	SetOutPortState(ScrewDriverPort,false);	//µçÅúĞÅºÅ¹Ø±Õ
-	SetOutPortState(VacuumValvePort,false);	//Õæ¿ÕĞÅºÅ¹Ø±Õ
+	SetOutPortState(ScrewDriverPort,false);	//ç”µæ‰¹ä¿¡å·å…³é—­
+	SetOutPortState(VacuumValvePort,false);	//çœŸç©ºä¿¡å·å…³é—­
 	CloseAlarm();
-	ShowSysResetForm(stopSource);	
-	//WriteLogBuffToFile();//Ğ´ÈëÈÕÖ¾»º´æµ½ÎÄ¼ş
+  DeviceStatusSRQ(DevScram,"è®¾å¤‡å·²æ€¥åœ");
+	//WriteLogBuffToFile();//å†™å…¥æ—¥å¿—ç¼“å­˜åˆ°æ–‡ä»¶
 }
 
 void btnInportEvent_OKClick(u16 keyCode)
@@ -278,18 +278,18 @@ void InportEventTask(void *arg)
 {
 	for(;;)
 	{
-		/* µÈ´ıÍ¨Öª£¬½øÈë×èÈû */  
+		/* ç­‰å¾…é€šçŸ¥ï¼Œè¿›å…¥é˜»å¡ */  
 		ulTaskNotifyTake( pdTRUE, portMAX_DELAY);
 		StopTasks();		
 		StopAllAxis();
-		SetOutPortState(ScrewDriverPort,false);	//µçÅúĞÅºÅ¹Ø±Õ
-		SetOutPortState(VacuumValvePort,false);	//Õæ¿ÕĞÅºÅ¹Ø±Õ
+		SetOutPortState(ScrewDriverPort,false);	//ç”µæ‰¹ä¿¡å·å…³é—­
+		SetOutPortState(VacuumValvePort,false);	//çœŸç©ºä¿¡å·å…³é—­
 		OpenAlarm();
 		ShowMessgeForm(_ies->Msg,btnInportEvent_OKClick,btnInportEventCancelClick);
 	}
 }
 
-//ÊäÈë¿ÚÊÂ¼ş¼ì²â²¢Ö´ĞĞ
+//è¾“å…¥å£äº‹ä»¶æ£€æµ‹å¹¶æ‰§è¡Œ
 void InportEventCheckRun(void)
 {
 	if(Moves.InportEventCount==0)
@@ -307,7 +307,7 @@ void InportEventCheckRun(void)
 	}
 }
 
-//Èç¹ûÕıÔÚ¹¤×÷ÖĞ¡¢¹ÊÕÏµÈ´ıÖĞ£¬µç»ú¸´Î»ÖĞ·µ»Øtrue£¬·ñÔò·µ»Øfalse
+//å¦‚æœæ­£åœ¨å·¥ä½œä¸­ã€æ•…éšœç­‰å¾…ä¸­ï¼Œç”µæœºå¤ä½ä¸­è¿”å›trueï¼Œå¦åˆ™è¿”å›false
 bool IsWorkRunning(void)
 {
 	if(_isMotionTest)
@@ -320,33 +320,33 @@ bool IsWorkRunning(void)
 		return true;
 	if(eTaskGetState(_workRunRightHandle)==eRunning)
 		return true;
-	if(eTaskGetState(_workRunLeftHandle)==eBlocked) //¹ÊÕÏµÈ´ıÊ±
+	if(eTaskGetState(_workRunLeftHandle)==eBlocked) //æ•…éšœç­‰å¾…æ—¶
 		return true;
 	if(eTaskGetState(_workRunRightHandle)==eBlocked)
 		return true;
 	return false;
 }
 
-//¿ªÊ¼Î»ÖÃ¸´Î»ÈÎÎñ
+//å¼€å§‹ä½ç½®å¤ä½ä»»åŠ¡
 void StartPositionReset(void)
 {
 	if(IsWorkRunning())
 		return;
-	//vTaskNotifyGiveFromISR( _positionResetHandle ,&xHigherPriorityTaskWoken);  //Õâ¸öº¯Êı¸ü¿ì
+	//vTaskNotifyGiveFromISR( _positionResetHandle ,&xHigherPriorityTaskWoken);  //è¿™ä¸ªå‡½æ•°æ›´å¿«
 	xTaskNotifyGive(_positionResetHandle);
 }
 
-//Ë«Æ½Ì¨Ê±£¬ÕıÔÚ¹¤×÷µÄÆ½Ì¨¹¤×÷ÈÎÎñµ÷ÓÃ´Ëº¯Êı£¬Ê¹ÁíÒ»¸öÆ½Ì¨½øÈë×¼±¸×´Ì¬Æ½Ì¨¼ÌĞøÕı³£¹¤×÷
-//platformComplate:µ÷ÓÃ´Ëº¯ÊıµÄÈÎÎñÆ½Ì¨£¬ÀıÈç£ºLeftPlat±íÊ¾×óÆ½Ì¨ÒÑÍê³É(°üÀ¨Ç°·ÅºóÈ¡Ê±µÄµÈ´ıÈ¡¼ş)£¬ÓÒÆ½Ì¨¿ÉÒÔ¿ªÊ¼¹¤×÷ÁË
+//åŒå¹³å°æ—¶ï¼Œæ­£åœ¨å·¥ä½œçš„å¹³å°å·¥ä½œä»»åŠ¡è°ƒç”¨æ­¤å‡½æ•°ï¼Œä½¿å¦ä¸€ä¸ªå¹³å°è¿›å…¥å‡†å¤‡çŠ¶æ€å¹³å°ç»§ç»­æ­£å¸¸å·¥ä½œ
+//platformComplate:è°ƒç”¨æ­¤å‡½æ•°çš„ä»»åŠ¡å¹³å°ï¼Œä¾‹å¦‚ï¼šLeftPlatè¡¨ç¤ºå·¦å¹³å°å·²å®Œæˆ(åŒ…æ‹¬å‰æ”¾åå–æ—¶çš„ç­‰å¾…å–ä»¶)ï¼Œå³å¹³å°å¯ä»¥å¼€å§‹å·¥ä½œäº†
 void ContinueNextPlatWork(LeftRightPlatformEnum platformComplate)
 {
-	if(Parameter.ProdType==SinglePlatform)//Èç¹ûÊÇµ¥Æ½Ì¨Ôò²»´æÔÚÕâÑùµÄ²Ù×÷
+	if(Parameter.ProdType==SinglePlatform)//å¦‚æœæ˜¯å•å¹³å°åˆ™ä¸å­˜åœ¨è¿™æ ·çš„æ“ä½œ
 		return;
 	if(platformComplate==RightPlatform)
 	{
-		if(_leftStartPara.WorkTaskState!=YReadyed)//Èç¹û²»ÊÇ×¼±¸×´Ì¬£¬±íÊ¾ÓÃ»§Î´°´ÏÂÁíÒ»Æô¶¯°´Å¥
+		if(_leftStartPara.WorkTaskState!=YReadyed)//å¦‚æœä¸æ˜¯å‡†å¤‡çŠ¶æ€ï¼Œè¡¨ç¤ºç”¨æˆ·æœªæŒ‰ä¸‹å¦ä¸€å¯åŠ¨æŒ‰é’®
 			return;
-		ShowWorkMsg_Plat(LeftPlatform, "¿ªÊ¼¹¤×÷");
+		ShowWorkMsg_Plat(LeftPlatform, "å¼€å§‹å·¥ä½œ");
 		_leftStartPara.WorkTaskState=TaskRunning;
 		StartWorkTask(LeftPlatform,_leftStartPara.StartSource);
 	}
@@ -354,43 +354,43 @@ void ContinueNextPlatWork(LeftRightPlatformEnum platformComplate)
 	{
 		if(_rightStartPara.WorkTaskState!=YReadyed)
 			return;
-		ShowWorkMsg_Plat(RightPlatform, "¿ªÊ¼¹¤×÷");
+		ShowWorkMsg_Plat(RightPlatform, "å¼€å§‹å·¥ä½œ");
 		_rightStartPara.WorkTaskState=TaskRunning;
 		StartWorkTask(RightPlatform,_rightStartPara.StartSource);
 	}
 }
 
-//¿ªÊ¼´òÂİË¿ÈÎÎñ
+//å¼€å§‹æ‰“èºä¸ä»»åŠ¡
 void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 {
-	//Èç¹û²»ÊÇÖ÷´°ÌåÔò²»½øĞĞÈÎºÎ¶¯×÷
+	//å¦‚æœä¸æ˜¯ä¸»çª—ä½“åˆ™ä¸è¿›è¡Œä»»ä½•åŠ¨ä½œ
 	//if(_currFormIndex!=1 && _currFormIndex!=71 && _currFormIndex!=91)
 		//return;	
 	if(_devCurrStatus!=DevReady && _devCurrStatus!=DevWorking)
 		return;
-	if(platform==RightPlatform && Parameter.ProdType==SinglePlatform)//Èç¹ûÊÇµ¥Æ½Ì¨²»ÏìÓ¦ÓÒÆ½Ì¨Æô¶¯
+	if(platform==RightPlatform && Parameter.ProdType==SinglePlatform)//å¦‚æœæ˜¯å•å¹³å°ä¸å“åº”å³å¹³å°å¯åŠ¨
 		return;
-	if(eTaskGetState(_positionResetHandle)==eRunning)//Èç¹ûÕı¸´Î»Ôò²»ÏìÓ¦
+	if(eTaskGetState(_positionResetHandle)==eRunning)//å¦‚æœæ­£å¤ä½åˆ™ä¸å“åº”
 		return;
-	if(_isMotionTest)//Èç¹ûÕıÔÚ¶¯×÷²âÊÔ
+	if(_isMotionTest)//å¦‚æœæ­£åœ¨åŠ¨ä½œæµ‹è¯•
 		return;
-    char* msg= "Î´¼ì²âµ½¹¤¼ş£¡";
+    char* msg= "æœªæ£€æµ‹åˆ°å·¥ä»¶ï¼";
 	if(platform==LeftPlatform)
 	{
-		//Èç¹ûÓÒÆ½Ì¨ÕıÔÚ¹¤×÷(°üÀ¨Õı³£¹¤×÷¡¢¹ÊÕÏµÈ´ı)£¬Ôò×óÆ½Ì¨½øÈë×¼±¸×´Ì¬(Y1ÒÆµ½µÚÒ»¸ö×ø±ê)
+		//å¦‚æœå³å¹³å°æ­£åœ¨å·¥ä½œ(åŒ…æ‹¬æ­£å¸¸å·¥ä½œã€æ•…éšœç­‰å¾…)ï¼Œåˆ™å·¦å¹³å°è¿›å…¥å‡†å¤‡çŠ¶æ€(Y1ç§»åˆ°ç¬¬ä¸€ä¸ªåæ ‡)
 		if(_rightStartPara.WorkTaskState==TaskRunning)
 		{
-			_leftStartPara.WorkTaskState=YReadyed;//×óÆ½Ì¨YÖáÒÑ×¼±¸¾ÍĞ÷
+			_leftStartPara.WorkTaskState=YReadyed;//å·¦å¹³å°Yè½´å·²å‡†å¤‡å°±ç»ª
 			RunYReadyTask(LeftPlatform);
 			return;
 		}
 		eTaskState taskState=eTaskGetState(_workRunLeftHandle);
-		if(taskState==eSuspended) //µ±YÖá½øÈë×¼±¸×´Ì¬ºó£¬ÓÉÁíÒ»Æ½Ì¨ÈÎÎñ½øÈë´Ë´úÂëÊ±ÈÎÎñ×´Ì¬±ä³ÉeReady£¬why??
+		if(taskState==eSuspended) //å½“Yè½´è¿›å…¥å‡†å¤‡çŠ¶æ€åï¼Œç”±å¦ä¸€å¹³å°ä»»åŠ¡è¿›å…¥æ­¤ä»£ç æ—¶ä»»åŠ¡çŠ¶æ€å˜æˆeReadyï¼Œwhy??
 		{
-			if(Parameter.IsWorkpieceCheck && GetInPortState(LeftWorkpiecePort))//Èç¹ûÆôÓÃÁË¹¤¼ş¼ì²â£¬µ«Ã»¼ì²âµ½¹¤¼ş
+			if(Parameter.IsWorkpieceCheck && GetInPortState(LeftWorkpiecePort))//å¦‚æœå¯ç”¨äº†å·¥ä»¶æ£€æµ‹ï¼Œä½†æ²¡æ£€æµ‹åˆ°å·¥ä»¶
 			{
 				//WriteLog(msg);
-				ShowWorkMsg(msg);//ÕâÖÖÌáÊ¾¶¼ÒªÓĞ£¬¶¼ÒªĞ´ÈëÈÕÖ¾ÎÄ¼ş
+				ShowWorkMsg(msg);//è¿™ç§æç¤ºéƒ½è¦æœ‰ï¼Œéƒ½è¦å†™å…¥æ—¥å¿—æ–‡ä»¶
 				return;
 			}
 			_leftStartPara.StartSource=sxs;
@@ -399,23 +399,23 @@ void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 		else if(_isWaitSemaphore)
 		{
 			_isWaitSemaphore=false;
-			//ÔÚÖĞ¶ÏÖĞ·¢ËÍĞÅºÅÁ¿£¬ÒÔFromISR½áÎ²µÄº¯Êı¾ßÓĞ±£»¤¹¦ÄÜ£¬Èç¹ûÔÚÈÎÎñÖĞ·¢ËÍĞÅºÅÁ¿¿ÉÊ¹ÓÃxSemaphoreGive¡£
+			//åœ¨ä¸­æ–­ä¸­å‘é€ä¿¡å·é‡ï¼Œä»¥FromISRç»“å°¾çš„å‡½æ•°å…·æœ‰ä¿æŠ¤åŠŸèƒ½ï¼Œå¦‚æœåœ¨ä»»åŠ¡ä¸­å‘é€ä¿¡å·é‡å¯ä½¿ç”¨xSemaphoreGiveã€‚
 			xSemaphoreGiveFromISR(_xSemaphoreNext, &xHigherPriorityTaskWoken );  
 		}
 	}
 	else
 	{
-		//Èç¹ûÓÒÆ½Ì¨ÕıÔÚ¹¤×÷(°üÀ¨Õı³£¹¤×÷¡¢¹ÊÕÏµÈ´ı)£¬Ôò×óÆ½Ì¨½øÈë×¼±¸×´Ì¬(Y1ÒÆµ½µÚÒ»¸ö×ø±ê)
+		//å¦‚æœå³å¹³å°æ­£åœ¨å·¥ä½œ(åŒ…æ‹¬æ­£å¸¸å·¥ä½œã€æ•…éšœç­‰å¾…)ï¼Œåˆ™å·¦å¹³å°è¿›å…¥å‡†å¤‡çŠ¶æ€(Y1ç§»åˆ°ç¬¬ä¸€ä¸ªåæ ‡)
 		if(_leftStartPara.WorkTaskState==TaskRunning)
 		{
-			_rightStartPara.WorkTaskState=YReadyed;//ÓÒÆ½Ì¨YÖáÒÑ×¼±¸¾ÍĞ÷
+			_rightStartPara.WorkTaskState=YReadyed;//å³å¹³å°Yè½´å·²å‡†å¤‡å°±ç»ª
 			RunYReadyTask(RightPlatform);
 			return;
 		}
 		eTaskState taskState=eTaskGetState(_workRunRightHandle);
-		if(taskState==eSuspended) //µ±YÖá½øÈë×¼±¸×´Ì¬ºó£¬ÓÉÁíÒ»Æ½Ì¨ÈÎÎñ½øÈë´Ë´úÂëÊ±ÈÎÎñ×´Ì¬±ä³ÉeReady£¬why??
+		if(taskState==eSuspended) //å½“Yè½´è¿›å…¥å‡†å¤‡çŠ¶æ€åï¼Œç”±å¦ä¸€å¹³å°ä»»åŠ¡è¿›å…¥æ­¤ä»£ç æ—¶ä»»åŠ¡çŠ¶æ€å˜æˆeReadyï¼Œwhy??
 		{
-			if(Parameter.IsWorkpieceCheck && GetInPortState(RightWorkpiecePort))//Èç¹ûÆôÓÃÁË¹¤¼ş¼ì²â£¬µ«Ã»¼ì²âµ½¹¤¼ş
+			if(Parameter.IsWorkpieceCheck && GetInPortState(RightWorkpiecePort))//å¦‚æœå¯ç”¨äº†å·¥ä»¶æ£€æµ‹ï¼Œä½†æ²¡æ£€æµ‹åˆ°å·¥ä»¶
 			{
 				//WriteLog(msg);
 				ShowWorkMsg(msg);
@@ -427,26 +427,26 @@ void StartWorkTask(LeftRightPlatformEnum platform,StartXinhaoSource sxs)
 		else if(_isWaitSemaphore)
 		{
 			_isWaitSemaphore=false;
-			//ÔÚÖĞ¶ÏÖĞ·¢ËÍĞÅºÅÁ¿£¬ÒÔFromISR½áÎ²µÄº¯Êı¾ßÓĞ±£»¤¹¦ÄÜ£¬Èç¹ûÔÚÈÎÎñÖĞ·¢ËÍĞÅºÅÁ¿¿ÉÊ¹ÓÃxSemaphoreGive¡£
+			//åœ¨ä¸­æ–­ä¸­å‘é€ä¿¡å·é‡ï¼Œä»¥FromISRç»“å°¾çš„å‡½æ•°å…·æœ‰ä¿æŠ¤åŠŸèƒ½ï¼Œå¦‚æœåœ¨ä»»åŠ¡ä¸­å‘é€ä¿¡å·é‡å¯ä½¿ç”¨xSemaphoreGiveã€‚
 			xSemaphoreGiveFromISR(_xSemaphoreNext, &xHigherPriorityTaskWokenRight);  
 		}
 	}	
 }
 
-//¹ÊÕÏºóÖØ´ò±¾×ø±ê
+//æ•…éšœåé‡æ‰“æœ¬åæ ‡
 void RepeatWork(void)
 {
 	if(_isWaitSemaphore)
 	{
-		ShowWorkMsg("ÖØ´òĞÅºÅ");
+		ShowWorkMsg("é‡æ‰“ä¿¡å·");
 		_isWaitSemaphore=false;
-		//ÔÚÖĞ¶ÏÖĞ·¢ËÍĞÅºÅÁ¿£¬ÒÔFromISR½áÎ²µÄº¯Êı¾ßÓĞ±£»¤¹¦ÄÜ£¬Èç¹ûÔÚÈÎÎñÖĞ·¢ËÍĞÅºÅÁ¿¿ÉÊ¹ÓÃxSemaphoreGive¡£
+		//åœ¨ä¸­æ–­ä¸­å‘é€ä¿¡å·é‡ï¼Œä»¥FromISRç»“å°¾çš„å‡½æ•°å…·æœ‰ä¿æŠ¤åŠŸèƒ½ï¼Œå¦‚æœåœ¨ä»»åŠ¡ä¸­å‘é€ä¿¡å·é‡å¯ä½¿ç”¨xSemaphoreGiveã€‚
 		//xSemaphoreGiveFromISR(_xSemaphoreRedo, &xHigherPriorityTaskWoken ); 
 		xSemaphoreGive(_xSemaphoreRedo);
 	}
 }
 
-//USBHostÈÎÎñ¹Ø±Õ»ò¿ªÆô
+//USBHostä»»åŠ¡å…³é—­æˆ–å¼€å¯
 void SetUSBHostTaskEnable(bool isEnable)
 {
     if(_usbHostHandle==NULL)
@@ -457,7 +457,7 @@ void SetUSBHostTaskEnable(bool isEnable)
 		vTaskSuspend(_usbHostHandle);
 }
 
-//±¨¾¯µÆÉÁË¸Ê¹ÄÜ
+//æŠ¥è­¦ç¯é—ªçƒä½¿èƒ½
 void EnableAlarmTwinkle(bool isEnable)
 {
 	if(isEnable)
@@ -466,7 +466,7 @@ void EnableAlarmTwinkle(bool isEnable)
 		vTaskSuspend(_alarmHandle);
 }
 
-//ÊµÊ±×ø±êÏÔÊ¾ÈÎÎñ¹Ø±Õ»ò¿ªÆô
+//å®æ—¶åæ ‡æ˜¾ç¤ºä»»åŠ¡å…³é—­æˆ–å¼€å¯
 void SetRealCoordTaskEnable(bool isEnable)
 {
     if(_showRealDataHandle==NULL)
@@ -477,7 +477,7 @@ void SetRealCoordTaskEnable(bool isEnable)
 		vTaskSuspend(_showRealDataHandle);
 }
 
-//IO×´Ì¬ÏÔÊ¾ÈÎÎñ¹Ø±Õ»ò¿ªÆô
+//IOçŠ¶æ€æ˜¾ç¤ºä»»åŠ¡å…³é—­æˆ–å¼€å¯
 void SetIOStateTaskEnable(bool isEnable)
 {
     if(_IOStateShowHandle==NULL)
@@ -488,7 +488,7 @@ void SetIOStateTaskEnable(bool isEnable)
 		vTaskSuspend(_IOStateShowHandle);
 }
 
-//Ê±¼äÏÔÊ¾ÈÎÎñ¹Ø±Õ»ò¿ªÆô
+//æ—¶é—´æ˜¾ç¤ºä»»åŠ¡å…³é—­æˆ–å¼€å¯
 void SetDateTimeTaskEnable(bool isEnable)
 {
     if(_dateTimeShowHandle==NULL)
