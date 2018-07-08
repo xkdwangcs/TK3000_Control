@@ -1,18 +1,18 @@
-#include "USBFunc.h"
+ï»¿#include "USBFunc.h"
 #include "FileOperate.h"
 #include "main.h"
 #include "AppTasks.h"
 //#include "MoveFileExImportForm.h"
 
 //TextBox* _txtUSBMsg;
-//DicTextBox* _listIsCover; //ÖØÃûÊÇ·ñ¸²¸Ç
-bool _isCover;  //ÖØÃûÊÇ·ñ¸²¸Ç
+//DicTextBox* _listIsCover; //é‡åæ˜¯å¦è¦†ç›–
+bool _isCover;  //é‡åæ˜¯å¦è¦†ç›–
 char* _paraFileNameUSB="1:/CFG/Parameter.cfg";
-ParameterStruct ParameterUSB; //USBÖĞµÄ²ÎÊıÎÄ¼şÊı¾İ
-//ÓëFat²Ù×÷Ïà¹ØµÄÈÎÎñÃ¶¾Ù
+ParameterStruct ParameterUSB; //USBä¸­çš„å‚æ•°æ–‡ä»¶æ•°æ®
+//ä¸Fatæ“ä½œç›¸å…³çš„ä»»åŠ¡æšä¸¾
 USBOperateEnum _usbOperate=NoUSBOP;
 
-//ÏÔÊ¾µ±Ç°ÎÄ¼ş¸´ÖÆĞÅÏ¢
+//æ˜¾ç¤ºå½“å‰æ–‡ä»¶å¤åˆ¶ä¿¡æ¯
 void ShowMSG(char* msgStr)
 {
 	//SetText(_txtUSBMsg,msgStr);
@@ -26,75 +26,75 @@ char* GetUSBFullPath(char* path)
 	return _usbPath;
 }
 
-//´ÓÉè±¸¸´ÖÆ×ø±êÎÄ¼şµ½UÅÌ
+//ä»è®¾å¤‡å¤åˆ¶åæ ‡æ–‡ä»¶åˆ°Uç›˜
 void CopyDeviceToUSB()
 {
     //bool isCover= ConvertAsciiTou32(_listIsCover->currKV->value);	
     bool bl = CopyAllFile_Dir("0:/COORD",GetUSBFullPath("1:/COORD"),_isCover,ShowMSG);
 	if(bl) 
 	{
-		ShowMSG("×ø±êÎÄ¼şµ¼³ö³É¹¦£¡");
+		ShowMSG("åæ ‡æ–‡ä»¶å¯¼å‡ºæˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("×ø±êÎÄ¼şµ¼³öÊ§°Ü£¡");
+		ShowMSG("åæ ‡æ–‡ä»¶å¯¼å‡ºå¤±è´¥ï¼");
 	}
 }
 
-//´ÓUÅÌ¸´ÖÆ×ø±êÎÄ¼şµ½Éè±¸
+//ä»Uç›˜å¤åˆ¶åæ ‡æ–‡ä»¶åˆ°è®¾å¤‡
 void CopyUSBToDevice()
 {
     bool bl = CopyAllFile_Dir(GetUSBFullPath("1:/COORD"),"0:/COORD",_isCover,ShowMSG);
 	if(bl) 
 	{
-		ShowMSG("×ø±êÎÄ¼şµ¼Èë³É¹¦£¡");
+		ShowMSG("åæ ‡æ–‡ä»¶å¯¼å…¥æˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("×ø±êÎÄ¼şµ¼ÈëÊ§°Ü£¡");
+		ShowMSG("åæ ‡æ–‡ä»¶å¯¼å…¥å¤±è´¥ï¼");
 	}
 } 
 
-//¸´ÖÆÈÕÖ¾ÎÄ¼şµ½UÅÌ
+//å¤åˆ¶æ—¥å¿—æ–‡ä»¶åˆ°Uç›˜
 void CopyLogFileToUSB()
 {
     bool bl = CopyAllFile_Dir("0:/LOG",GetUSBFullPath("1:/LOG"),_isCover,ShowMSG);  
 	if(bl) 
 	{
-		ShowMSG("ÈÕÖ¾ÎÄ¼şµ¼³ö³É¹¦£¡");
+		ShowMSG("æ—¥å¿—æ–‡ä»¶å¯¼å‡ºæˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("ÈÕÖ¾ÎÄ¼şµ¼³öÊ§°Ü£¡");
+		ShowMSG("æ—¥å¿—æ–‡ä»¶å¯¼å‡ºå¤±è´¥ï¼");
 	}
 }
 
-//¹Ì¼şÉı¼¶
+//å›ºä»¶å‡çº§
 void FirmwareUpdate(u16 keyCode)
 {
 	*(__IO uint8_t *) (FirmwareUpdateTagAddr)=1;
 	SystemReset();
 }
 
-//µ¼³öÅäÖÃÎÄ¼şµ½UÅÌ£¬Ä¿Ç°Ö÷ÒªÓÃÓÚÃúÅÆĞÅÏ¢µÄµ¼Èë
+//å¯¼å‡ºé…ç½®æ–‡ä»¶åˆ°Uç›˜ï¼Œç›®å‰ä¸»è¦ç”¨äºé“­ç‰Œä¿¡æ¯çš„å¯¼å…¥
 void ExportParamaterFileToUSB(void)
 {
 	memset(_usbPath,0,sizeof(_usbPath));
 	sprintf(_usbPath,"1:/CFG/%s/Parameter.cfg",Parameter.ProdModel);
 	//bool isCover= ConvertAsciiTou32(_listIsCover->currKV->value);
-	bool bl= CopyFile(_paraFileName,_paraFileNameUSB,_isCover);//Í¨ÓÃµÄ²ÎÊıÓÃÓÚÃúÅÆĞÅÏ¢¸´ÖÆ
-	bl=bl && CopyFile(_paraFileName,_usbPath,_isCover);//²»Í¬ĞÍºÅÉè±¸
+	bool bl= CopyFile(_paraFileName,_paraFileNameUSB,_isCover);//é€šç”¨çš„å‚æ•°ç”¨äºé“­ç‰Œä¿¡æ¯å¤åˆ¶
+	bl=bl && CopyFile(_paraFileName,_usbPath,_isCover);//ä¸åŒå‹å·è®¾å¤‡
 	if(bl) 
 	{
-		ShowMSG("²ÎÊıÎÄ¼şµ¼³ö³É¹¦£¡");
+		ShowMSG("å‚æ•°æ–‡ä»¶å¯¼å‡ºæˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("²ÎÊıÎÄ¼şµ¼³öÊ§°Ü£¡");
+		ShowMSG("å‚æ•°æ–‡ä»¶å¯¼å‡ºå¤±è´¥ï¼");
 	}
 }
 
@@ -107,16 +107,16 @@ void ImportParamaterToDevice(void)
 	if(bl) 
 	{
 		IniParameter();
-		ShowMSG("²ÎÊıÎÄ¼şµ¼Èë³É¹¦£¡");
+		ShowMSG("å‚æ•°æ–‡ä»¶å¯¼å…¥æˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("²ÎÊıÎÄ¼şµ¼ÈëÊ§°Ü£¡");
+		ShowMSG("å‚æ•°æ–‡ä»¶å¯¼å…¥å¤±è´¥ï¼");
 	}
 }
 
-//µ¼ÈëÃúÅÆĞÅÏ¢µ½Éè±¸
+//å¯¼å…¥é“­ç‰Œä¿¡æ¯åˆ°è®¾å¤‡
 void ImportMPtoDev(void)
 {
 	ReadBytesFormFile(_paraFileNameUSB,(u8*) &ParameterUSB,0,sizeof(ParameterUSB));
@@ -131,12 +131,12 @@ void ImportMPtoDev(void)
 		strcpy(Parameter.ProduDate,ParameterUSB.ProduDate);
 		strcpy(Parameter.ProdID,ParameterUSB.ProdID);
 		//WriteParameter(ShowDialog_OK);
-		ShowMSG("ÃúÅÆĞÅÏ¢µ¼Èë³É¹¦£¡");
+		ShowMSG("é“­ç‰Œä¿¡æ¯å¯¼å…¥æˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("UÅÌÖĞµÄ²ÎÊıÎÄ¼ş´íÎó£¡");
+		ShowMSG("Uç›˜ä¸­çš„å‚æ•°æ–‡ä»¶é”™è¯¯ï¼");
 	}
 }
 
@@ -144,15 +144,15 @@ void PortFileToUSB(void)
 {
 	memset(_usbPath,0,sizeof(_usbPath));
 	sprintf(_usbPath,"1:/CFG/%s/PortMotor.cfg",Parameter.ProdModel);
-	bool bl=CopyFile(_portFileName,_usbPath,_isCover);//²»Í¬ĞÍºÅÉè±¸
+	bool bl=CopyFile(_portFileName,_usbPath,_isCover);//ä¸åŒå‹å·è®¾å¤‡
 	if(bl) 
 	{
-		ShowMSG("¶Ë¿ÚÎÄ¼şµ¼³ö³É¹¦£¡");
+		ShowMSG("ç«¯å£æ–‡ä»¶å¯¼å‡ºæˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("¶Ë¿ÚÎÄ¼şµ¼³öÊ§°Ü£¡");
+		ShowMSG("ç«¯å£æ–‡ä»¶å¯¼å‡ºå¤±è´¥ï¼");
 	}
 }
 
@@ -164,16 +164,16 @@ void ImportPortFileToDevice(void)
 	if(bl) 
 	{
 		IniPortCFGFile();
-		ShowMSG("¶Ë¿ÚÎÄ¼şµ¼Èë³É¹¦£¡");
+		ShowMSG("ç«¯å£æ–‡ä»¶å¯¼å…¥æˆåŠŸï¼");
 		//PopForm(2);
 	}
 	else
 	{
-		ShowMSG("¶Ë¿ÚÎÄ¼şµ¼ÈëÊ§°Ü£¡");
+		ShowMSG("ç«¯å£æ–‡ä»¶å¯¼å…¥å¤±è´¥ï¼");
 	}
 }
 
-//USBÏà¹Ø²Ù×÷µÄÈÎÎñ
+//USBç›¸å…³æ“ä½œçš„ä»»åŠ¡
 void USBOpereateTask(void)
 {
 	if(_usbOperate==NoUSBOP)
@@ -215,38 +215,38 @@ void USBOpereateTask(void)
 	_usbOperate=NoUSBOP;
 }
 
-//USB²Ù×÷½çÃæµ¥»÷°´Å¥ÊÂ¼ş
+//USBæ“ä½œç•Œé¢å•å‡»æŒ‰é’®äº‹ä»¶
 void btnOnclick_USBOP(u16 keyCode)
 {
-	if(keyCode==0x0001)  //¸´ÖÆ×ø±êÎÄ¼ş£¬Éè±¸->USB
+	if(keyCode==0x0001)  //å¤åˆ¶åæ ‡æ–‡ä»¶ï¼Œè®¾å¤‡->USB
     {
        _usbOperate=ExportCoordFile;
     }
-    else if(keyCode==0x0002)  //¸´ÖÆ×ø±êÎÄ¼ş£¬USB->Éè±¸
+    else if(keyCode==0x0002)  //å¤åˆ¶åæ ‡æ–‡ä»¶ï¼ŒUSB->è®¾å¤‡
     {
         _usbOperate=ImportCoordFile;
     }
-	else if(keyCode==0x0003)  //²ÎÊıµ¼³ö
+	else if(keyCode==0x0003)  //å‚æ•°å¯¼å‡º
     {
         _usbOperate=ExportParaFile;
     }
-    else if(keyCode==0x0004)  //²ÎÊıµ¼Èë
+    else if(keyCode==0x0004)  //å‚æ•°å¯¼å…¥
     {
         _usbOperate=ImportParaFile;
     }
-	else if(keyCode==0x0005)//ÈÕÖ¾µ¼³ö
+	else if(keyCode==0x0005)//æ—¥å¿—å¯¼å‡º
 	{
 		_usbOperate=ExportLogFile;
 	}
-	else if(keyCode==0x0006)//ÃúÅÆµ¼Èë
+	else if(keyCode==0x0006)//é“­ç‰Œå¯¼å…¥
 	{
 		_usbOperate=ImportMPPara;
 	}
-	else if(keyCode==0x000A)//¶Ë¿ÚÎÄ¼şµ¼³ö
+	else if(keyCode==0x000A)//ç«¯å£æ–‡ä»¶å¯¼å‡º
 	{
 		_usbOperate=ExportPortFile;
 	}
-	else if(keyCode==0x000B)//¶Ë¿ÚÎÄ¼şµ¼Èë
+	else if(keyCode==0x000B)//ç«¯å£æ–‡ä»¶å¯¼å…¥
 	{
 		_usbOperate=ImportPortFile;
 	}
