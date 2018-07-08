@@ -2,19 +2,19 @@
 #include "CMD.h"
 
 u32 _cpuID=0;//CPUID
-const u8 _devNumLeng=8;//»úÆ÷Âë³¤¶È
-u8 _regNumLeng=16; //×¢²áÂë³¤¶È
+const u8 _devNumLeng=8;//æœºå™¨ç é•¿åº¦
+u8 _regNumLeng=16; //æ³¨å†Œç é•¿åº¦
 char _devNum[_devNumLeng];
 //char* _keyStr="1a2b3c4d";
 
-//»ñÈ¡CPUµÄÎ¨Ò»±êÊ¶Âë,´Ë±êÊ¶Âë°Ñ96Î»ÒÆÎ»Ïà¼ÓµÃ³ö
+//èŽ·å–CPUçš„å”¯ä¸€æ ‡è¯†ç ,æ­¤æ ‡è¯†ç æŠŠ96ä½ç§»ä½ç›¸åŠ å¾—å‡º
 u32 GetCPUID(void)
 {
-    //F103µÄID¶ÁÈ¡
+    //F103çš„IDè¯»å–
 //	u32 id1=*(vu32*)(0x1FFFF7E8);
 //	u32 id2=*(vu32*)(0x1FFFF7EC);
 //	u32 id3=*(vu32*)(0x1FFFF7F0);
-    //F207/F40XµÄ¶ÁÈ¡
+    //F207/F40Xçš„è¯»å–
     u32 id1=*(vu32*)(0x1FFF7A10);
 	u32 id2=*(vu32*)(0x1FFF7A14);
 	u32 id3=*(vu32*)(0x1FFF7A18);
@@ -22,22 +22,22 @@ u32 GetCPUID(void)
 	return _cpuID;
 }
 
-//¼ÆËã³ö»úÆ÷Âë
+//è®¡ç®—å‡ºæœºå™¨ç 
 char* CalcDeviceNumber()
 {
 	memset(_devNum,0,sizeof(_devNum));
     //char tempBuff[16]={0};
     u32 id = GetCPUID();
  	sprintf(_devNum,"%08X",id);
-    //Encrypt_XYQ(tempBuff,_devNum); //²»Òª¼ÓÃÜ
+    //Encrypt_XYQ(tempBuff,_devNum); //ä¸è¦åŠ å¯†
 	return _devNum;
 }
 
-//È¥µô×¢²áÂëÖÐµÄºáÏß
+//åŽ»æŽ‰æ³¨å†Œç ä¸­çš„æ¨ªçº¿
 void RemoveRegNumLine(char* regNum)
 {
 	u8 regLeng=strlen(regNum);
-	if(regLeng>_regNumLeng && regNum[4]=='-')//Èç¹ûÓÐºáÏß
+	if(regLeng>_regNumLeng && regNum[4]=='-')//å¦‚æžœæœ‰æ¨ªçº¿
 	{
 		for(u8 i=0;i<4;i++)
 		{
@@ -55,38 +55,38 @@ void RemoveRegNumLine(char* regNum)
 	}
 }
 
-//ÔÚÉè±¸ÉÏ½øÐÐ×¢²á
+//åœ¨è®¾å¤‡ä¸Šè¿›è¡Œæ³¨å†Œ
 bool RegisterDevice(char* regNum)
 {
 	RemoveRegNumLine(regNum);
     u8 regLeng=strlen(regNum);
 	if(regLeng!=_regNumLeng)
 	{
-		SetCurrStatus(RegWait,"×¢²áÂë³¤¶È´íÎó!");
+		SetCurrStatus(RegWait,"æ³¨å†Œç é•¿åº¦é”™è¯¯!");
 		return false;
 	}
-    char regPlainStr[32]={0};//×¢²áÂëÃ÷ÎÄ
-    //Decipher((u8*)regStr,(u8*)_keyStr,(u8*)regNum);//DES½âÃÜ
-    if(!Decipher_XYQ(regNum,regPlainStr))//XYQ·½Ê½½âÃÜ
+    char regPlainStr[32]={0};//æ³¨å†Œç æ˜Žæ–‡
+    //Decipher((u8*)regStr,(u8*)_keyStr,(u8*)regNum);//DESè§£å¯†
+    if(!Decipher_XYQ(regNum,regPlainStr))//XYQæ–¹å¼è§£å¯†
     {
-		SetCurrStatus(RegWait,"×¢²áÂë´íÎó!");
+		SetCurrStatus(RegWait,"æ³¨å†Œç é”™è¯¯!");
 		return false; 
     }
-	char* devNumCalc=CalcDeviceNumber();//¼ÆËã³ö±¾»úÆ÷Âë
+	char* devNumCalc=CalcDeviceNumber();//è®¡ç®—å‡ºæœ¬æœºå™¨ç 
 	char devNumReg[8]={0};
 	CopyBytes1((u8*)devNumReg,0,(u8*)regPlainStr,0,8);
 	//char devNumReg[8]={0};
-	//Decipher_XYQ(devNumReg1,devNumReg);//²»ÐèÒªË«ÖØ½âÃÜ»úÆ÷Âë£¬ÒòÎª×¢²á»úÒÑ¾­ÊÇ½âÃÜ»úÆ÷Âë
+	//Decipher_XYQ(devNumReg1,devNumReg);//ä¸éœ€è¦åŒé‡è§£å¯†æœºå™¨ç ï¼Œå› ä¸ºæ³¨å†Œæœºå·²ç»æ˜¯è§£å¯†æœºå™¨ç 
 	if(!StrCMP_n(devNumReg,devNumCalc,8))
 	{
-		SetCurrStatus(RegWait,"»úÆ÷Âë²»Æ¥Åä!");
+		SetCurrStatus(RegWait,"æœºå™¨ç ä¸åŒ¹é…!");
 		return false;
 	}
-    char* yxDate = DateFormat(regPlainStr+8);//×¢²áÂëÖÐµÄÓÐÐ§ÈÕÆÚ
+    char* yxDate = DateFormat(regPlainStr+8);//æ³¨å†Œç ä¸­çš„æœ‰æ•ˆæ—¥æœŸ
 	char* currDate=GetCurrDateStr();
 	if(DateTimeCMP(yxDate,currDate)!=Greater)
 	{
-		SetCurrStatus(RegWait,"×¢²áÂëÒÑ¹ýÆÚ!");
+		SetCurrStatus(RegWait,"æ³¨å†Œç å·²è¿‡æœŸ!");
 		return false;
 	}
     memset(SysParameter.RegNum,0,sizeof(SysParameter.RegNum));
@@ -97,24 +97,24 @@ bool RegisterDevice(char* regNum)
     strcpy(SysParameter.YXDate,yxDate);
     memset(SysParameter.DevNum,0,sizeof(SysParameter.DevNum));
     strcpy(SysParameter.DevNum,devNumCalc);
-	if(DateTimeCMP(yxDate,"2999-01-01")==Equal) //ÎÞÏÞÖÆ
+	if(DateTimeCMP(yxDate,"2999-01-01")==Equal) //æ— é™åˆ¶
 	{
 		SysParameter.RegState=Unlimited;
 	}
 	else
 	{
-		SysParameter.RegState=Limit;//ÓÐÊ±¼äÏÞÖÆµÄ×¢²á
+		SysParameter.RegState=Limit;//æœ‰æ—¶é—´é™åˆ¶çš„æ³¨å†Œ
 	}
     WriteSysParameter();
-	SetCurrStatus(DevReady,"Éè±¸×¢²áÍê³É");
+	SetCurrStatus(DevReady,"è®¾å¤‡æ³¨å†Œå®Œæˆ");
     return true;
 }
 
-//¼ì²é»úÆ÷ÂëÊÇ·ñÆ¥Åä
+//æ£€æŸ¥æœºå™¨ç æ˜¯å¦åŒ¹é…
 bool CheckDeviceNum(void)
 {
-	char* devNumReg=SysParameter.DevNum;//×¢²áÂëÖÐµÃµ½µÄ»úÆ÷Âë
-    char* devNumCalc=CalcDeviceNumber();//¼ÆËã³ö±¾»úÆ÷Âë
+	char* devNumReg=SysParameter.DevNum;//æ³¨å†Œç ä¸­å¾—åˆ°çš„æœºå™¨ç 
+    char* devNumCalc=CalcDeviceNumber();//è®¡ç®—å‡ºæœ¬æœºå™¨ç 
     if(!StrCMP_n(devNumReg,devNumCalc,8))
 	{
 		return false;
@@ -122,29 +122,29 @@ bool CheckDeviceNum(void)
 	return true;
 }
 
-//Æô¶¯³ÌÐòÊ±,¼ì²é×¢²áÂë,Èç¹ûÍ¨¹ý¼ì²é·µ»Øtrue
+//å¯åŠ¨ç¨‹åºæ—¶,æ£€æŸ¥æ³¨å†Œç ,å¦‚æžœé€šè¿‡æ£€æŸ¥è¿”å›žtrue
 bool CheckRegister()//(char* msg)
 {
     if(SysParameter.RegState==NoReg)
     {
-        return false;
-        //return true; //Éè±¸Î´×¢²á²»µ¯³ö×¢²á¿ò
+        //return false;
+        return true; //è®¾å¤‡æœªæ³¨å†Œä¸å¼¹å‡ºæ³¨å†Œæ¡†
     }
 	if(!CheckDeviceNum())
 	{
-		//strcpy(msg,"»úÆ÷Âë²»Æ¥Åä!");
+		//strcpy(msg,"æœºå™¨ç ä¸åŒ¹é…!");
 		return false;
 	}
-	if(SysParameter.RegState==Unlimited) //ÒÑ¾­ÓÐÎÞÏÞÖÆµÄ×¢²á
+	if(SysParameter.RegState==Unlimited) //å·²ç»æœ‰æ— é™åˆ¶çš„æ³¨å†Œ
 		return true;
     char* currDate=GetCurrDateStr();
     char* yxDate=SysParameter.YXDate;
     //if(DateTimeCMP(yxDate,currDate)==Less)
 	int tdd = CalcDateDiff_String(yxDate,currDate);
-	//if(tdd<3)//×¢²áµ½ÆÚÇ°3ÌìÌáÊ¾
-	if(tdd<1) //×¢²áÂëÒÑµ½ÆÚ
+	//if(tdd<3)//æ³¨å†Œåˆ°æœŸå‰3å¤©æç¤º
+	if(tdd<1) //æ³¨å†Œç å·²åˆ°æœŸ
 	{
-		//strcpy(msg,"×¢²áÂëÒÑ¹ýÆÚ!");
+		//strcpy(msg,"æ³¨å†Œç å·²è¿‡æœŸ!");
 		return false;
 	}
     return true;
