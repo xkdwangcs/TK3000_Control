@@ -2597,7 +2597,11 @@
       </Doc>
       <Doc>
         <Name>.\BSP\nvic.c</Name>
+<<<<<<< HEAD
         <ColumnNumber>10</ColumnNumber>
+=======
+        <ColumnNumber>4</ColumnNumber>
+>>>>>>> 628f547e61f4659ded20ef05310f0a0faa07ea70
         <TopLine>58</TopLine>
         <CurrentLine>92</CurrentLine>
         <Folding>1</Folding>
@@ -2642,16 +2646,26 @@
       </Doc>
       <Doc>
         <Name>.\main.c</Name>
+<<<<<<< HEAD
         <ColumnNumber>12</ColumnNumber>
         <TopLine>157</TopLine>
         <CurrentLine>174</CurrentLine>
+=======
+        <ColumnNumber>40</ColumnNumber>
+        <TopLine>157</TopLine>
+        <CurrentLine>164</CurrentLine>
+>>>>>>> 628f547e61f4659ded20ef05310f0a0faa07ea70
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>.\COM\Protocol.c</Name>
+<<<<<<< HEAD
         <ColumnNumber>10</ColumnNumber>
+=======
+        <ColumnNumber>4</ColumnNumber>
+>>>>>>> 628f547e61f4659ded20ef05310f0a0faa07ea70
         <TopLine>43</TopLine>
         <CurrentLine>65</CurrentLine>
         <Folding>1</Folding>
