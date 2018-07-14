@@ -168,6 +168,8 @@ void DeviceInit(void)
             //ShowWelcomeForm();
         }
     }
+		//PTSpeedTypeEnum _currPTSpeedType=MEDIUM;//当前点动速度类型，默认为"中"
+		SetPTRunPara(MEDIUM);
     //PositionResetMove();
 //    LCDBeep(300);
 //    SendCharsPack(_srq, "COM1_0K!");
