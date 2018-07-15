@@ -43,7 +43,12 @@ void RDDProcess(void)
 		SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)&SysParameter,sizeof(SysParameter));
 		return;
 	}
-	return;
+    if(StrCMP(_cmdRecvBuff.CmdName, "CURRCOORD")) //读取当前实时坐标
+    {
+        MultiAxisCoordStruct* mas=GetRealTimeCoord();
+        SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)mas,sizeof(*mas));
+		return;
+    }
 }
 
 //WRT命令回复OK

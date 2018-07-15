@@ -50,10 +50,10 @@ void AxisInit(void)
 //取到实时坐标
 MultiAxisCoordStruct* GetRealTimeCoord(void)
 {
-	_currCoord.X = MotorList[_xMotor].RealPulse * Parameter.PulseK[_xMotor];
+	_currCoord.X1 = MotorList[_xMotor].RealPulse * Parameter.PulseK[_xMotor];
 	_currCoord.Y1 = MotorList[_y1Motor].RealPulse * Parameter.PulseK[_y1Motor];
 	_currCoord.Y2 = MotorList[_y2Motor].RealPulse * Parameter.PulseK[_y2Motor];
-	_currCoord.Z = MotorList[_zMotor].RealPulse * Parameter.PulseK[_zMotor];
+	_currCoord.Z1 = MotorList[_zMotor].RealPulse * Parameter.PulseK[_zMotor];
 	return &_currCoord;
 }
 

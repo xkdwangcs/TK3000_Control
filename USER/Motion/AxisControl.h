@@ -22,10 +22,12 @@ typedef struct
 
 typedef struct
 {
-	float X;
+	float X1;
+    float X2;
 	float Y1;//左平台Y坐标
 	float Y2;//右平台Y坐标
-	float Z;
+	float Z1;
+    float Z2;
 }MultiAxisCoordStruct;//多轴坐标，主要用于实时坐标
 
 typedef enum

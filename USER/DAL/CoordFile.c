@@ -256,8 +256,8 @@ void AddCoordinate(LeftRightPlatformEnum platform,MultiAxisCoordStruct saveCoord
 	{
 		CoordFileAttri cfi = GetFileAttri(&file);
         CoordStruct coord;
-        coord.X=saveCoord.X;
-        coord.Z=saveCoord.Z;
+        coord.X=saveCoord.X1;
+        coord.Z=saveCoord.Z1;
         u16 startAddr=_fileAttriLeng + cfi.LeftCoordCount*_oneCoordBytes;  
         if(platform==LeftPlatform)
         {
@@ -354,8 +354,8 @@ void InsertCoordinate(LeftRightPlatformEnum platform,MultiAxisCoordStruct saveCo
 	{
 		CoordFileAttri cfi = GetFileAttri(&file);
         CoordStruct coord;
-        coord.X=saveCoord.X;
-        coord.Z=saveCoord.Z;
+        coord.X=saveCoord.X1;
+        coord.Z=saveCoord.Z1;
         u16 startAddr= _fileAttriLeng + coordIndex*_oneCoordBytes;    
         if(platform==LeftPlatform)
         {
@@ -425,8 +425,8 @@ void UpdateCoordinate(LeftRightPlatformEnum platform,u16 coordIndex, MultiAxisCo
 	{
         CoordFileAttri cfi = GetFileAttri(&file);
         CoordStruct coord;
-        coord.X=saveCoord->X;
-        coord.Z=saveCoord->Z;
+        coord.X=saveCoord->X1;
+        coord.Z=saveCoord->Z1;
         u16 startAddr=_fileAttriLeng + coordIndex*_oneCoordBytes;  
         if(platform==LeftPlatform)
         {
