@@ -11,6 +11,7 @@ USART_TypeDef *currUSART = USART1;
 char* _showFormCmd="ShowForm";
 //当前设备状态，作为主动上送及主控查询用
 char _statuStr[100];
+LoopDataStruct _loopData; 
 
 //设置程序当前状态。statusID：状态号，statusDescribe：状态描述文本
 //要注意的是，由于汉字显示要用UTF-8,所以传入的文字信息一定要是UTF-8.否则显示不了
@@ -43,10 +44,11 @@ void RDDProcess(void)
 		SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)&SysParameter,sizeof(SysParameter));
 		return;
 	}
-    if(StrCMP(_cmdRecvBuff.CmdName, "CURRCOORD")) //读取当前实时坐标
+    if(StrCMP(_cmdRecvBuff.CmdName, "LOOPDATA")) //读取循环的数据
     {
-        MultiAxisCoordStruct* mas=GetRealTimeCoord();
-        SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)mas,sizeof(*mas));
+        _loopData.RealCoord=*GetRealTimeCoord();
+        _loopData.DataTime=*GetCurrDataTime();
+        SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)&_loopData,sizeof(_loopData));
 		return;
     }
 }

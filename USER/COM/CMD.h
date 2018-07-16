@@ -12,6 +12,11 @@
 #include "Protocol.h"
 #include "WorkControl.h"
 	 
+typedef struct
+{
+    MultiAxisCoordStruct RealCoord; //实时坐标
+    DataTimeStruct DataTime;        //控制器时间    
+}LoopDataStruct;//循环读取的数据结构
 	 
 //RDD相关命令的处理
 void RDDProcess(void);
