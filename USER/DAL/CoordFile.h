@@ -11,7 +11,7 @@
 #include "Parameter.h"
 #include "AxisLinkage.h"
 
-#define _fileMaxCount 100 //最大文件数  
+#define _fileMaxCount 20 //最大文件数  
 #define _coordMaxCount 500 //最大坐标数
 	 
 typedef enum
@@ -29,7 +29,13 @@ typedef struct
     int DateTime; //排序用
 } CoordFileAttri;//坐标文件属性结构体
 
-extern CoordFileAttri _fileList[_fileMaxCount];//对外开放，用于地址计算
+typedef struct
+{
+    u16 FileCount;
+    CoordFileAttri FileList[_fileMaxCount];    
+}FileListStruct; //文件列表相关数据
+
+extern FileListStruct _fileList;//对外开放，用于地址计算
 extern CoordStruct _coordListLeft[_coordMaxCount];//对外开放，用于地址计算
 
 //当前工作文件
@@ -38,8 +44,8 @@ extern CoordFileAttri _workFile;
 void IniFileRecord(void);
 //创建一个新文件
 void CreateFile(char* fileName);
-//读文件信息列表
-CoordFileAttri* ReadFileList(u16* fileCount);
+//读取文件信息列表
+FileListStruct* ReadFileList();
 //删除指定的文件
 void DeleteFile(CoordFileAttri file);
 //初始化坐标文件

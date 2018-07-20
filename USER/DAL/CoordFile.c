@@ -11,7 +11,7 @@ u16 _leftCoordCount=0;
 u16 _rightCoordCount=0;
 CoordStruct _coordListLeft[_coordMaxCount]__at(LeftCoordAddr);//左平台坐标列表
 CoordStruct _coordListRight[_coordMaxCount] __at(RightCoordAddr);//右平台坐标列表
-CoordFileAttri _fileList[_fileMaxCount] __at(CoordFileAttriAddr);//文件属性列表
+FileListStruct _fileList __at(CoordFileAttriAddr);//文件属性列表
 //u8 _DMASendBuff_COM3[_sendBuffLeng_COM3] __at(LcdSendBuffAddr);//DMA发送缓存
 
 char* _diskStrCrd="0:/";
@@ -65,7 +65,7 @@ void ShortFile_TimeDES1(CoordFileAttri* sortFileList,u8 fileCount)
 }
 
 //读取文件信息列表
-CoordFileAttri* ReadFileList(u16* fileCount)
+FileListStruct* ReadFileList()
 {
 	FATFS fs;
     FIL file;
@@ -82,22 +82,22 @@ CoordFileAttri* ReadFileList(u16* fileCount)
 		} 
 		else 
 		{  
-			strcpy( _fileList[fileIndex].FileName,finfo.fname);
+			strcpy(_fileList.FileList[fileIndex].FileName,finfo.fname);
             res = f_open(&file,GetFullPath(finfo.fname),FA_READ);			
 			CoordFileAttri cfi = GetFileAttri(&file);
-			_fileList[fileIndex].CoordCount=cfi.CoordCount;
-			_fileList[fileIndex].LeftCoordCount=cfi.LeftCoordCount;
-			_fileList[fileIndex].RightCoordCount=cfi.RightCoordCount;
-            _fileList[fileIndex].DateTime=(int)(finfo.fdate<<16|finfo.ftime);
+			_fileList.FileList[fileIndex].CoordCount=cfi.CoordCount;
+			_fileList.FileList[fileIndex].LeftCoordCount=cfi.LeftCoordCount;
+			_fileList.FileList[fileIndex].RightCoordCount=cfi.RightCoordCount;
+            _fileList.FileList[fileIndex].DateTime=(int)(finfo.fdate<<16|finfo.ftime);
 			res = f_close(&file);
 			fileIndex++;		
 		}
 	}
     res = f_closedir(&dirs);
     res = f_mount(NULL,_diskStrCrd, 0);
-	*fileCount =fileIndex;
-    ShortFile_TimeDES1( _fileList,fileIndex);
-	return _fileList;
+	_fileList.FileCount =fileIndex;
+    ShortFile_TimeDES1( _fileList.FileList,fileIndex);
+	return &_fileList;
 }
  
 //创建指定名称的文件
@@ -181,14 +181,14 @@ void IniCoordFile(void)
 	{
         if(*Parameter.WorkFileName=='\0')
         {
-            SetWorkFile(_fileList[0]);
+            SetWorkFile(_fileList.FileList[0]);
             return;
         }
 		for(u16 i=0;i<fileCount;i++)
         {
-            if(StrCMP(_fileList[i].FileName,Parameter.WorkFileName))
+            if(StrCMP(_fileList.FileList[i].FileName,Parameter.WorkFileName))
             {
-               _workFile=_fileList[i];
+               _workFile=_fileList.FileList[i];
                break;
             }
         }		

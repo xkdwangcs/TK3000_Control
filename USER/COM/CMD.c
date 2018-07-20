@@ -50,6 +50,12 @@ void RDDProcess(void)
         _loopData.DataTime=*GetCurrDataTime();
         SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)&_loopData,sizeof(_loopData));
 		return;
+    }    
+    if(StrCMP(_cmdRecvBuff.CmdName, "FILELIST")) //读取文件列表
+    {
+        FileListStruct* fList = ReadFileList();
+        SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)fList,sizeof(*fList));
+		return;
     }
 }
 
