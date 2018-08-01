@@ -57,6 +57,13 @@ void RDDProcess(void)
         SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)fList,sizeof(*fList));
 		return;
     }
+    if(StrCMP(_cmdRecvBuff.CmdName, "IOStatus")) //读取IO口状态
+    {
+        IOStatusStruct ioStatus = GetIOStatus();
+        SendBytes_Pack(_rdd,_cmdRecvBuff.CmdName,(u8*)&ioStatus,sizeof(ioStatus));
+		return;
+    }
+    
 }
 
 //WRT命令回复OK
@@ -84,6 +91,16 @@ void WRTProcess(void)
     if (StrCMP(_cmdRecvBuff.CmdName, "RegisterDevice")) //设备注册
     {		
       RegisterDevice((char*)_cmdRecvBuff.CmdData);
+    }    
+    if (StrCMP(_cmdRecvBuff.CmdName, "SetOutPort")) //设置输出口动作
+    {		
+        //u8 count=0;
+        //LIST* ls=GetLIST((char*)_cmdRecvBuff.CmdData,&count);
+        u8 index=_cmdRecvBuff.CmdData[0];
+        if (GetOutPortState_Index(index))
+            SetOutPortState_Index(index,false);
+        else
+            SetOutPortState_Index(index,true);
     }
 }
 

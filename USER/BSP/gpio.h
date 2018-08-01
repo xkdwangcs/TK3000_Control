@@ -108,6 +108,15 @@ extern "C" {
 	bool GetInPortState_Index(u8 portIndex);
 	//板载指示灯闪烁
 	void LightAlarmPCB(u8 count);
+    
+    typedef struct
+    {
+        bool InportStatus[24];  //24路输入口状态
+        bool OutportStatus[16]; //16路输出口状态
+    }IOStatusStruct; //IO口状态结构
+    
+    //读取控制器输入输出口状态
+    IOStatusStruct GetIOStatus();
 
 #ifdef __cplusplus
 }

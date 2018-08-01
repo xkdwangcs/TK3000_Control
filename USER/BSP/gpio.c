@@ -301,3 +301,18 @@ void LightAlarmPCB(u8 count)
 		Delay_ms(200);
 	}
 }
+
+IOStatusStruct _ioStatus;
+//读取控制器输入输出口状态
+IOStatusStruct GetIOStatus()
+{
+    for (int i = 0; i < InPortNum; i++)
+    {
+        _ioStatus.InportStatus[i]=GetInPortState_Index(i);
+    }
+    for (int i = 0; i < OutPortNum; i++)
+    {
+        _ioStatus.OutportStatus[i]=GetOutPortState_Index(i);
+    }
+    return _ioStatus;
+}
