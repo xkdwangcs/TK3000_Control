@@ -13,7 +13,7 @@ u8 _tail = 0xBA;
 u8 _destAddr = 0x01;
 u8 _sourAddr = 0x08;
 u16 _poly = 0x1021; //crc生成多项式
-u8 _dataOverBytes=33; //数据以外的字节数
+u8 _dataOverBytes=23; //数据以外的字节数
 
 //命令接收缓存
 ProtocolBuffStruct _cmdRecvBuff;
@@ -52,7 +52,7 @@ u16 CRC16ByPoly(u8 *data, u16 startIndex, u16 length)
 	return crc;
 }
 
-//AB LEN1 LEN2 ADDR1 ADDR2 PNUM PID FUN1 FUN2 FUN3 CNAME1..CNAME20 data1....dataN CRC1 CRC2 BA
+//AB LEN1 LEN2 ADDR1 ADDR2 PNUM PID FUN1 FUN2 FUN3 CNAME1..CNAME10 data1....dataN CRC1 CRC2 BA
 //组包，返回组好包的包长
 u16 Package(char* func,char* cmdName,u8* cmdData,u16 dataLeng)
 {

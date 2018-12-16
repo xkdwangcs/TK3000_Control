@@ -11,6 +11,7 @@
 #include "AxisLinkage.h"
 #include "Protocol.h"
 #include "WorkControl.h"
+
 	 
 typedef struct
 {

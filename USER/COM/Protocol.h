@@ -47,7 +47,7 @@ typedef struct
   u8 PackNum;             //分包数，为0时表示没分包
 	u8 PackID;					    //包号
 	char FunCode[3];			//功能码
-	char CmdName[20];			//命令名，固定长度，不足用0补充
+	char CmdName[10];			//命令名，固定长度，不足用0补充
 	u8 CmdData[_com3BuffLeng];	//命令数据据，发送时包括了CRC、尾
   u16 DataLeng;            //数据域实际长度
 } ProtocolBuffStruct;//通信缓存结构
